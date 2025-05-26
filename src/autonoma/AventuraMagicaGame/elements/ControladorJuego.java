@@ -1,12 +1,7 @@
 package autonoma.AventuraMagicaGame.elements;
 
-import autonoma.AventuraMagica.elements.Enemigo;
-import autonoma.AventuraMagica.elements.Esmeralda;
-import autonoma.AventuraMagica.elements.Jugador;
-import autonoma.AventuraMagica.elements.Nivel;
-import autonoma.AventuraMagica.elements.SimboloPregunta;
-import autonoma.AventuraMagicaBase.elements.Sprite;
 
+import autonoma.AventuraMagicaGameBase.elements.Sprite;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;

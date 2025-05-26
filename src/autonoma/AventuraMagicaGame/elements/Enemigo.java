@@ -1,6 +1,6 @@
 package autonoma.AventuraMagicaGame.elements;
 
-import autonoma.AventuraMagicaBase.elements.Sprite;
+import autonoma.AventuraMagicaGameBase.elements.Sprite;
 
 /**
  * Clase base para representar enemigos en el juego Aventura Mágica.

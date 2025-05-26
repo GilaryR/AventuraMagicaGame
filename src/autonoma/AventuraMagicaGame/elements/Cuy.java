@@ -1,6 +1,6 @@
 package autonoma.AventuraMagicaGame.elements;
 
-import autonoma.AventuraMagica.elements.Enemigo;
+import autonoma.AventuraMagicaGame.elements.Enemigo;
 
 /**
  * Representa a un enemigo tipo Cuy dentro del juego Aventura Mágica.

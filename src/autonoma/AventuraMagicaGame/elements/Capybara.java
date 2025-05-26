@@ -1,6 +1,6 @@
 package autonoma.AventuraMagicaGame.elements;
 
-import autonoma.AventuraMagica.elements.Enemigo;
+import autonoma.AventuraMagicaGame.elements.Enemigo;
 
 /**
  * Clase que representa un enemigo tipo Capybara en el juego.

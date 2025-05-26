@@ -1,6 +1,6 @@
 package autonoma.AventuraMagicaGame.elements;
 
-import autonoma.AventuraMagicaBase.elements.Sprite;
+import autonoma.AventuraMagicaGameBase.elements.Sprite;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
