@@ -1,6 +1,8 @@
-package autonoma.AventuraMagica.elements;
+package autonoma.AventuraMagicaGame.elements;
 
-import autonoma.AventuraMagicaBase.elements.Sprite;
+import autonoma.AventuraMagicaGameBase.elements.Sprite;
+
+
 
 public class Jugador extends Sprite {
     private int puntaje;
