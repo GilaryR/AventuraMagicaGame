@@ -1,6 +1,7 @@
 
 package autonoma.AventuraMagicaGame.elements;
 
+import autonoma.AventuraMagicaGameBase.elements.Sprite;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,36 +37,69 @@ public abstract class NivelBase implements Nivel {
     protected abstract int artefactosRequeridos();
 
     private void generarElementos() {
-        List<String> mezcla = new ArrayList<>();
+    List<String> mezcla = new ArrayList<>();
 
-        // Agrega tipos de enemigos en la mezcla con sus cantidades
-        for (String tipo : tiposEnemigos()) {
-            int cantidad = cantidadDe(tipo);
-            for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
-        }
+    // Agrega tipos de enemigos en la mezcla con sus cantidades
+    for (String tipo : tiposEnemigos()) {
+        int cantidad = cantidadDe(tipo);
+        for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
+    }
 
-        // Agrega tipos de artefactos en la mezcla con sus cantidades
-        for (String tipo : tiposArtefactos()) {
-            int cantidad = cantidadDe(tipo);
-            for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
-        }
+    // Agrega tipos de artefactos en la mezcla con sus cantidades
+    for (String tipo : tiposArtefactos()) {
+        int cantidad = cantidadDe(tipo);
+        for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
+    }
 
-        // Mezclamos la lista para que enemigos y artefactos estén mezclados
-        Collections.shuffle(mezcla, rand);
+    // Mezclamos para alternar tipos
+    Collections.shuffle(mezcla, rand);
 
-        for (String tipo : mezcla) {
+    for (String tipo : mezcla) {
+        Sprite nuevo = null;
+        boolean colocado = false;
+        int intentos = 0;
+
+        while (!colocado && intentos < 100) {
             int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
             int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
 
             switch (tipo) {
-                case "Tucan": enemigos.add(new Tucan(x, y)); break;
-                case "Frailejon": enemigos.add(new Frailejon(x, y)); break;
-                case "Cuy": enemigos.add(new Cuy(x, y)); break;
-                case "Capybara": enemigos.add(new Capybara(x, y)); break;
-                case "Botella": artefactos.add(new Botella(x, y)); break;
-                case "Esmeralda": artefactos.add(new Esmeralda(x, y)); break;
+                case "Tucan": nuevo = new Tucan(x, y); break;
+                case "Frailejon": nuevo = new Frailejon(x, y); break;
+                case "Cuy": nuevo = new Cuy(x, y); break;
+                case "Capybara": nuevo = new Capybara(x, y); break;
+                case "Botella": nuevo = new Botella(x, y); break;
+                case "Esmeralda": nuevo = new Esmeralda(x, y); break;
             }
+
+            if (!colisionaConExistentes(nuevo)) {
+                if (nuevo instanceof Enemigo) {
+                    enemigos.add((Enemigo) nuevo);
+                } else if (nuevo instanceof Artefacto) {
+                    artefactos.add((Artefacto) nuevo);
+                }
+                colocado = true;
+            }
+
+            intentos++;
         }
+
+        if (!colocado) {
+            System.out.println("No se pudo colocar el objeto: " + tipo + " después de muchos intentos.");
+        }
+    }
+}
+    private boolean colisionaConExistentes(Sprite nuevo) {
+        for (Enemigo e : enemigos) {
+            if (nuevo.getBounds().intersects(e.getBounds())) return true;
+        }
+        for (Artefacto a : artefactos) {
+            if (nuevo.getBounds().intersects(a.getBounds())) return true;
+        }
+        for (SimboloPregunta s : simbolos) {
+            if (nuevo.getBounds().intersects(s.getBounds())) return true;
+        }
+        return false;
     }
 
     private void generarSimbolosPregunta() {

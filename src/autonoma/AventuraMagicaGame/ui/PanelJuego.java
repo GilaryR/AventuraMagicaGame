@@ -7,6 +7,7 @@ import autonoma.AventuraMagicaGame.elements.Jugador;
 import autonoma.AventuraMagicaGame.elements.Nivel;
 import autonoma.AventuraMagicaGame.thread.HiloJuego;
 import autonoma.AventuraMagicaGame.thread.HiloProgresoNivel;
+import autonoma.AventuraMagicaGame.util.ReproductorSonido;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
