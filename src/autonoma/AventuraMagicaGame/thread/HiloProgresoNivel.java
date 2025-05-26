@@ -1,6 +1,6 @@
 package autonoma.AventuraMagicaGame.thread;
 
-import autonoma.AventuraMagicaGame.elements.GestorNivel;
+import autonoma.AventuraMagicaGame.util.GestorNivel;
 import autonoma.AventuraMagicaGame.elements.Jugador;
 
 

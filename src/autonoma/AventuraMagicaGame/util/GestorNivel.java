@@ -1,6 +1,10 @@
 
-package autonoma.AventuraMagicaGame.elements;
+package autonoma.AventuraMagicaGame.util;
 
+import autonoma.AventuraMagicaGame.elements.Nivel;
+import autonoma.AventuraMagicaGame.elements.NivelDificil;
+import autonoma.AventuraMagicaGame.elements.NivelFacil;
+import autonoma.AventuraMagicaGame.elements.NivelIntermedio;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package autonoma.AventuraMagicaGame.ui;
 
 
-import autonoma.AventuraMagicaGame.elements.ControladorJuego;
-import autonoma.AventuraMagicaGame.elements.GestorNivel;
+import autonoma.AventuraMagicaGame.util.ControladorJuego;
+import autonoma.AventuraMagicaGame.util.GestorNivel;
 import autonoma.AventuraMagicaGame.elements.Jugador;
 import autonoma.AventuraMagicaGame.elements.Nivel;
 import autonoma.AventuraMagicaGame.exceptions.SonidoNoEncontradoException;

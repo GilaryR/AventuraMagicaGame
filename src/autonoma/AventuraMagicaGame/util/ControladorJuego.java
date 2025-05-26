@@ -1,6 +1,14 @@
-package autonoma.AventuraMagicaGame.elements;
+package autonoma.AventuraMagicaGame.util;
 
 
+import autonoma.AventuraMagicaGame.elements.Artefacto;
+import autonoma.AventuraMagicaGame.elements.Botella;
+import autonoma.AventuraMagicaGame.elements.Enemigo;
+import autonoma.AventuraMagicaGame.elements.Esmeralda;
+import autonoma.AventuraMagicaGame.elements.Jugador;
+import autonoma.AventuraMagicaGame.elements.Nivel;
+import autonoma.AventuraMagicaGame.elements.NivelBase;
+import autonoma.AventuraMagicaGame.elements.SimboloPregunta;
 import autonoma.AventuraMagicaGameBase.elements.Sprite;
 import java.awt.Graphics;
 import java.util.ArrayList;
