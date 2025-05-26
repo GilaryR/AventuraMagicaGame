@@ -1,6 +1,7 @@
 
 package autonoma.AventuraMagicaGameBase.elements;
 
+import autonoma.AventuraMagicaGame.exceptions.EscrituraExcepcion;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
