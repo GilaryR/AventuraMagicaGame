@@ -1,13 +1,12 @@
 package autonoma.AventuraMagicaGame.ui;
 
-import autonoma.AventuraMagica.elements.Nivel;
-import autonoma.AventuraMagica.elements.Jugador;
-import autonoma.AventuraMagica.elements.GestorNivel;
-import autonoma.AventuraMagica.elements.ControladorJuego;
-import autonoma.AventuraMagica.elements.*;
-import autonoma.AventuraMagica.thread.HiloJuego;
-import autonoma.AventuraMagica.thread.HiloProgresoNivel;
-import autonoma.AventuraMagica.util.ReproductorSonido;
+
+import autonoma.AventuraMagicaGame.elements.ControladorJuego;
+import autonoma.AventuraMagicaGame.elements.GestorNivel;
+import autonoma.AventuraMagicaGame.elements.Jugador;
+import autonoma.AventuraMagicaGame.elements.Nivel;
+import autonoma.AventuraMagicaGame.thread.HiloJuego;
+import autonoma.AventuraMagicaGame.thread.HiloProgresoNivel;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

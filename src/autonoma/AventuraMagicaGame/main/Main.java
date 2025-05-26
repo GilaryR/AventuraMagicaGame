@@ -1,6 +1,7 @@
 
 package autonoma.AventuraMagicaGame.main;
 
+import autonoma.AventuraMagicaGame.ui.VentanaPrincipal;
 import javax.swing.SwingUtilities;
 
 /**

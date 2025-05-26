@@ -1,5 +1,7 @@
 package autonoma.AventuraMagicaGame.thread;
 
+import autonoma.AventuraMagicaGame.ui.PanelJuego;
+
 /**
  *
  * @author jgiugtiñut
