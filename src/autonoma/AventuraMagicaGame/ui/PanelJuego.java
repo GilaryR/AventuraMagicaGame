@@ -5,8 +5,10 @@ import autonoma.AventuraMagicaGame.elements.ControladorJuego;
 import autonoma.AventuraMagicaGame.elements.GestorNivel;
 import autonoma.AventuraMagicaGame.elements.Jugador;
 import autonoma.AventuraMagicaGame.elements.Nivel;
+import autonoma.AventuraMagicaGame.exceptions.SonidoNoEncontradoException;
 import autonoma.AventuraMagicaGame.thread.HiloJuego;
 import autonoma.AventuraMagicaGame.thread.HiloProgresoNivel;
+import autonoma.AventuraMagicaGame.util.ReproductorSonido;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -26,7 +28,7 @@ public class PanelJuego extends JPanel {
         this.nivel = gestorNivel.getNivelActual();
         this.controlador = new ControladorJuego(nivel);
 
-        this.fondo = new ImageIcon(getClass().getResource("/autonoma/AventuraMagica/images/Fondo.jpg")).getImage();
+        this.fondo = new ImageIcon(getClass().getResource("/autonoma/AventuraMagicaGame/images/Fondo.jpg")).getImage();
         this.puntaje = 0;
         this.pausa = false;
 
@@ -91,25 +93,28 @@ private void configurarControles() {
         });
     }
 
-public void actualizarJuego() {
+public void actualizarJuego() throws SonidoNoEncontradoException {
     if (!pausa && controlador != null) {
         controlador.moverEnemigos();
         controlador.verificarColisiones();
         repaint();
+
         // ✅ Verificar si el jugador perdió
         Jugador jugador = controlador.getJugador();
         if (jugador != null && jugador.getVidas() <= 0) {
-            ReproductorSonido.reproducir("sonidos/gameover.wav");
+            ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/GameOver.wav");  // Lanza la excepción si no se encuentra
             mostrarPantallaGameOver();
-            detenerJuego();
         }
     }
 }
-    private void mostrarPantallaGameOver() {
+
+private void mostrarPantallaGameOver() {
     JOptionPane.showMessageDialog(this, "¡Game Over! Te has quedado sin vidas.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
-    // Opción: puedes reiniciar el juego o cerrar la aplicación
-    System.exit(0);  // O redirige al menú si tienes uno
+    System.exit(0);  // O vuelve al menú principal si tienes uno
 }
+
+
+
   
 private void cargarSiguienteNivel() {
     // Mostrar mensaje de nivel completado
