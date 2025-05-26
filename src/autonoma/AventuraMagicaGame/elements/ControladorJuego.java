@@ -15,23 +15,20 @@ import java.util.List;
  */
  
 public class ControladorJuego {
-    private Jugador jugador;
+private Jugador jugador;
     private Nivel nivel;
     private List<Enemigo> enemigos;
     private List<Artefacto> artefactos;
     private List<SimboloPregunta> simbolos;
 
     /**
-     * Constructor de la clase ControladorJuego.
-     * Inicializa el jugador y carga todos los elementos del nivel proporcionado.
-     *
-     * @param nivel El nivel que contiene enemigos, artefactos y símbolos de pregunta.
+     * Constructor que inicializa el controlador con el nivel actual.
+     * @param nivel Nivel que contiene enemigos, artefactos y símbolos.
      */
     public ControladorJuego(Nivel nivel) {
         if (nivel == null) {
             throw new IllegalArgumentException("El nivel no puede ser nulo");
         }
-
         this.nivel = nivel;
         this.jugador = new Jugador(400, 500);
         this.enemigos = new ArrayList<>(nivel.getEnemigos());
@@ -39,22 +36,12 @@ public class ControladorJuego {
         this.simbolos = new ArrayList<>(nivel.getSimbolosPregunta());
     }
 
-    /**
-     * Dibuja al jugador en pantalla si está disponible.
-     *
-     * @param g El contexto gráfico donde se dibujará.
-     */
     public void dibujarJugador(Graphics g) {
         if (jugador != null) {
             jugador.dibujar(g);
         }
     }
 
-    /**
-     * Dibuja todos los enemigos visibles del nivel.
-     *
-     * @param g El contexto gráfico donde se dibujarán.
-     */
     public void dibujarEnemigos(Graphics g) {
         for (Enemigo enemigo : enemigos) {
             if (enemigo != null && enemigo.isVisible()) {
@@ -63,11 +50,6 @@ public class ControladorJuego {
         }
     }
 
-    /**
-     * Dibuja todos los artefactos visibles que no han sido recolectados.
-     *
-     * @param g El contexto gráfico donde se dibujarán.
-     */
     public void dibujarArtefactos(Graphics g) {
         for (Artefacto artefacto : artefactos) {
             if (artefacto != null && artefacto.isVisible() && !artefacto.isRecolectado()) {
@@ -76,11 +58,6 @@ public class ControladorJuego {
         }
     }
 
-    /**
-     * Dibuja los símbolos de pregunta visibles del nivel.
-     *
-     * @param g El contexto gráfico donde se dibujarán.
-     */
     public void dibujarSimbolos(Graphics g) {
         for (SimboloPregunta simbolo : simbolos) {
             if (simbolo != null && simbolo.isVisible()) {
@@ -90,26 +67,23 @@ public class ControladorJuego {
     }
 
     /**
-     * Verifica todas las colisiones entre el jugador y:
-     * - enemigos (reduce vida),
-     * - artefactos (activa efecto y cambia estado),
-     * - símbolos de pregunta (modifica puntaje).
+     * Verifica colisiones entre el jugador y los elementos del juego:
+     * enemigos, artefactos y símbolos de pregunta.
      */
     public void verificarColisiones() {
-        // Colisiones con enemigos
+        // Colisión con enemigos
         for (Enemigo enemigo : enemigos) {
-            if (enemigo.isVisible() && colision(jugador, enemigo)) {
+            if (enemigo != null && enemigo.isVisible() && colision(jugador, enemigo)) {
                 jugador.reducirVida(10);
                 enemigo.setVisible(false);
             }
         }
 
-        // Colisiones con artefactos
+        // Colisión con artefactos
         for (Artefacto artefacto : artefactos) {
-            if (artefacto.isVisible() && !artefacto.isRecolectado() && colision(jugador, artefacto)) {
+            if (artefacto != null && artefacto.isVisible() && !artefacto.isRecolectado() && colision(jugador, artefacto)) {
                 artefacto.setRecolectado(true);
 
-                // Aplica efectos adicionales según el tipo de artefacto
                 if (artefacto instanceof Botella) {
                     jugador.recolectarBotella();
                 } else if (artefacto instanceof Esmeralda) {
@@ -118,10 +92,11 @@ public class ControladorJuego {
             }
         }
 
-        // Colisiones con símbolos de pregunta
+        // Colisión con símbolos
         for (SimboloPregunta simbolo : simbolos) {
-            if (simbolo.isVisible() &&
+            if (simbolo != null && simbolo.isVisible() &&
                 simbolo.verificarColision(jugador.getX(), jugador.getY(), jugador.getAncho(), jugador.getAlto())) {
+
                 int puntos = simbolo.manejarColision();
 
                 if (puntos > 0) {
@@ -134,55 +109,27 @@ public class ControladorJuego {
     }
 
     /**
-     * Mueve a todos los enemigos visibles en el juego.
+     * Mueve todos los enemigos visibles.
      */
     public void moverEnemigos() {
         for (Enemigo enemigo : enemigos) {
-            if (enemigo.isVisible()) {
+            if (enemigo != null && enemigo.isVisible()) {
                 enemigo.mover();
             }
         }
     }
 
-    /**
-     * Devuelve el jugador actual.
-     *
-     * @return Instancia del jugador.
-     */
     public Jugador getJugador() {
         return jugador;
     }
 
     /**
-     * Verifica si hay colisión entre el jugador y un artefacto.
-     *
-     * @param jugador El jugador del juego.
-     * @param artefacto El artefacto a verificar.
-     * @return true si hay intersección; false en caso contrario.
-     */
-    private boolean colision(Jugador jugador, Artefacto artefacto) {
-        return jugador.getBounds().intersects(artefacto.getBounds());
-    }
-
-    /**
-     * Verifica si hay colisión entre el jugador y un enemigo.
-     *
-     * @param jugador El jugador del juego.
-     * @param enemigo El enemigo a verificar.
-     * @return true si hay intersección; false en caso contrario.
-     */
-    private boolean colision(Jugador jugador, Enemigo enemigo) {
-        return jugador.getBounds().intersects(enemigo.getBounds());
-    }
-
-    /**
-     * Verifica si hay colisión entre dos sprites genéricos.
-     *
-     * @param a Sprite A.
-     * @param b Sprite B.
-     * @return true si hay intersección; false en caso contrario.
+     * Verifica si hay colisión entre dos sprites.
+     * @param a Sprite A
+     * @param b Sprite B
+     * @return true si hay colisión.
      */
     private boolean colision(Sprite a, Sprite b) {
-        return a.getBounds().intersects(b.getBounds());
+        return a != null && b != null && a.getBounds().intersects(b.getBounds());
     }
 }

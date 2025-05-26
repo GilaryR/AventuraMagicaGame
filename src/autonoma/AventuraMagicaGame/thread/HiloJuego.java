@@ -1,13 +1,15 @@
 package autonoma.AventuraMagicaGame.thread;
 
+import autonoma.AventuraMagicaGame.exceptions.SonidoNoEncontradoException;
 import autonoma.AventuraMagicaGame.ui.PanelJuego;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author jgiugtiñut
  */
 public class HiloJuego extends Thread {
-
     private final PanelJuego panelJuego;
     private boolean enEjecucion;
 
@@ -29,6 +31,8 @@ public class HiloJuego extends Thread {
                 Thread.sleep(100); // 10 actualizaciones por segundo
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            } catch (SonidoNoEncontradoException ex) {
+                Logger.getLogger(HiloJuego.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

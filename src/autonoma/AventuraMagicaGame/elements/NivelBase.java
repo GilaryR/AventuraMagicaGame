@@ -13,9 +13,10 @@ import java.util.Random;
  */
 
 public abstract class NivelBase implements Nivel {
-    protected List<Enemigo> enemigos;
+   protected List<Enemigo> enemigos;
     protected List<Artefacto> artefactos;
     protected List<SimboloPregunta> simbolos;
+    protected Jugador jugador;  // Nuevo: referencia al jugador
 
     private static final int ANCHO_PANTALLA = 800;
     private static final int ALTO_PANTALLA = 600;
@@ -30,6 +31,11 @@ public abstract class NivelBase implements Nivel {
         generarSimbolosPregunta();
     }
 
+    // Método para establecer el jugador desde el controlador
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
+    }
+
     // Métodos abstractos para definir cantidades y tipos en cada nivel
     protected abstract List<String> tiposEnemigos();
     protected abstract List<String> tiposArtefactos();
@@ -37,59 +43,64 @@ public abstract class NivelBase implements Nivel {
     protected abstract int artefactosRequeridos();
 
     private void generarElementos() {
-    List<String> mezcla = new ArrayList<>();
+        List<String> mezcla = new ArrayList<>();
 
-    // Agrega tipos de enemigos en la mezcla con sus cantidades
-    for (String tipo : tiposEnemigos()) {
-        int cantidad = cantidadDe(tipo);
-        for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
-    }
+        // Agrega tipos de enemigos en la mezcla con sus cantidades
+        for (String tipo : tiposEnemigos()) {
+            int cantidad = cantidadDe(tipo);
+            for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
+        }
 
-    // Agrega tipos de artefactos en la mezcla con sus cantidades
-    for (String tipo : tiposArtefactos()) {
-        int cantidad = cantidadDe(tipo);
-        for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
-    }
+        // Agrega tipos de artefactos en la mezcla con sus cantidades
+        for (String tipo : tiposArtefactos()) {
+            int cantidad = cantidadDe(tipo);
+            for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
+        }
 
-    // Mezclamos para alternar tipos
-    Collections.shuffle(mezcla, rand);
+        // Mezclamos para alternar tipos
+        Collections.shuffle(mezcla, rand);
 
-    for (String tipo : mezcla) {
-        Sprite nuevo = null;
-        boolean colocado = false;
-        int intentos = 0;
+        for (String tipo : mezcla) {
+            Sprite nuevo = null;
+            boolean colocado = false;
+            int intentos = 0;
 
-        while (!colocado && intentos < 100) {
-            int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
-            int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
+            while (!colocado && intentos < 100) {
+                int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
+                int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
 
-            switch (tipo) {
-                case "Tucan": nuevo = new Tucan(x, y); break;
-                case "Frailejon": nuevo = new Frailejon(x, y); break;
-                case "Cuy": nuevo = new Cuy(x, y); break;
-                case "Capybara": nuevo = new Capybara(x, y); break;
-                case "Botella": nuevo = new Botella(x, y); break;
-                case "Esmeralda": nuevo = new Esmeralda(x, y); break;
-            }
-
-            if (!colisionaConExistentes(nuevo)) {
-                if (nuevo instanceof Enemigo) {
-                    enemigos.add((Enemigo) nuevo);
-                } else if (nuevo instanceof Artefacto) {
-                    artefactos.add((Artefacto) nuevo);
+                switch (tipo) {
+                    case "Tucan": nuevo = new Tucan(x, y); break;
+                    case "Frailejon": nuevo = new Frailejon(x, y); break;
+                    case "Cuy": nuevo = new Cuy(x, y); break;
+                    case "Capybara": nuevo = new Capybara(x, y); break;
+                    case "Botella": nuevo = new Botella(x, y); break;
+                    case "Esmeralda": nuevo = new Esmeralda(x, y); break;
                 }
-                colocado = true;
+
+                if (!colisionaConExistentes(nuevo)) {
+                    if (nuevo instanceof Enemigo) {
+                        enemigos.add((Enemigo) nuevo);
+                    } else if (nuevo instanceof Artefacto) {
+                        artefactos.add((Artefacto) nuevo);
+                    }
+                    colocado = true;
+                }
+
+                intentos++;
             }
 
-            intentos++;
-        }
-
-        if (!colocado) {
-            System.out.println("No se pudo colocar el objeto: " + tipo + " después de muchos intentos.");
+            if (!colocado) {
+                System.out.println();
+            }
         }
     }
-}
+
     private boolean colisionaConExistentes(Sprite nuevo) {
+        if (jugador != null && nuevo.getBounds().intersects(jugador.getBounds())) {
+            return true;
+        }
+
         for (Enemigo e : enemigos) {
             if (nuevo.getBounds().intersects(e.getBounds())) return true;
         }
@@ -104,14 +115,24 @@ public abstract class NivelBase implements Nivel {
 
     private void generarSimbolosPregunta() {
         for (int i = 0; i < 3; i++) {
-            int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
-            int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
+            boolean colocado = false;
+            int intentos = 0;
+            while (!colocado && intentos < 100) {
+                int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
+                int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
 
-            List<Acertijo> acertijos = new ArrayList<>();
-            acertijos.add(new Acertijo("¿Capital de Colombia?", "Bogotá"));
-            acertijos.add(new Acertijo("2 + 2 * 2 =", "6"));
+                List<Acertijo> acertijos = new ArrayList<>();
+                acertijos.add(new Acertijo("¿Capital de Colombia?", "Bogotá"));
+                acertijos.add(new Acertijo("2 + 2 * 2 =", "6"));
 
-            simbolos.add(new SimboloPregunta(x, y, acertijos));
+                SimboloPregunta simbolo = new SimboloPregunta(x, y, acertijos);
+                if (!colisionaConExistentes(simbolo)) {
+                    simbolos.add(simbolo);
+                    colocado = true;
+                }
+
+                intentos++;
+            }
         }
     }
 

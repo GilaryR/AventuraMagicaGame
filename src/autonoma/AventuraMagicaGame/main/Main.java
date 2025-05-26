@@ -1,4 +1,5 @@
 
+
 package autonoma.AventuraMagicaGame.main;
 
 import autonoma.AventuraMagicaGame.ui.VentanaPrincipal;
