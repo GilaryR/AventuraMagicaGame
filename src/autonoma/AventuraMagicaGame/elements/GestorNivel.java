@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author jgiugtiñut
+ * @author Gilary
  */
 
 public class GestorNivel {
