@@ -13,10 +13,10 @@ import java.util.Random;
  */
 
 public abstract class NivelBase implements Nivel {
-   protected List<Enemigo> enemigos;
+protected List<Enemigo> enemigos;
     protected List<Artefacto> artefactos;
     protected List<SimboloPregunta> simbolos;
-    protected Jugador jugador;  // Nuevo: referencia al jugador
+    protected Jugador jugador;
 
     private static final int ANCHO_PANTALLA = 800;
     private static final int ALTO_PANTALLA = 600;
@@ -27,37 +27,31 @@ public abstract class NivelBase implements Nivel {
         enemigos = new ArrayList<>();
         artefactos = new ArrayList<>();
         simbolos = new ArrayList<>();
-        generarElementos();
-        generarSimbolosPregunta();
+        // Quitamos llamada a generarElementos() aquí
     }
 
-    // Método para establecer el jugador desde el controlador
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
     }
 
-    // Métodos abstractos para definir cantidades y tipos en cada nivel
     protected abstract List<String> tiposEnemigos();
     protected abstract List<String> tiposArtefactos();
-    protected abstract int cantidadDe(String tipo);  // devuelve cantidad para un tipo dado
+    protected abstract int cantidadDe(String tipo);
     protected abstract int artefactosRequeridos();
 
-    private void generarElementos() {
+    public void generarElementos() {
         List<String> mezcla = new ArrayList<>();
 
-        // Agrega tipos de enemigos en la mezcla con sus cantidades
         for (String tipo : tiposEnemigos()) {
             int cantidad = cantidadDe(tipo);
             for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
         }
 
-        // Agrega tipos de artefactos en la mezcla con sus cantidades
         for (String tipo : tiposArtefactos()) {
             int cantidad = cantidadDe(tipo);
             for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
         }
 
-        // Mezclamos para alternar tipos
         Collections.shuffle(mezcla, rand);
 
         for (String tipo : mezcla) {
@@ -89,10 +83,6 @@ public abstract class NivelBase implements Nivel {
 
                 intentos++;
             }
-
-            if (!colocado) {
-                System.out.println();
-            }
         }
     }
 
@@ -113,7 +103,7 @@ public abstract class NivelBase implements Nivel {
         return false;
     }
 
-    private void generarSimbolosPregunta() {
+    public void generarSimbolosPregunta() {
         for (int i = 0; i < 3; i++) {
             boolean colocado = false;
             int intentos = 0;

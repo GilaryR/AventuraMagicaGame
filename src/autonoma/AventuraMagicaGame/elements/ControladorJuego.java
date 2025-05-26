@@ -12,10 +12,12 @@ import java.util.List;
  * @author Alejandra ortega 
  * @since 26-05-2025
  * @version 2.0
+ * @author Gilary Rugeles
+ * @version 3.0
  */
  
 public class ControladorJuego {
-private Jugador jugador;
+   private Jugador jugador;
     private Nivel nivel;
     private List<Enemigo> enemigos;
     private List<Artefacto> artefactos;
@@ -29,8 +31,17 @@ private Jugador jugador;
         if (nivel == null) {
             throw new IllegalArgumentException("El nivel no puede ser nulo");
         }
+
         this.nivel = nivel;
         this.jugador = new Jugador(400, 500);
+
+        // Notificamos al nivel la posición del jugador para evitar colisiones
+        if (nivel instanceof NivelBase) {
+            ((NivelBase) nivel).setJugador(jugador);
+            ((NivelBase) nivel).generarElementos(); // <<--- llamado manual
+            ((NivelBase) nivel).generarSimbolosPregunta(); // <<--- llamado manual
+        }
+
         this.enemigos = new ArrayList<>(nivel.getEnemigos());
         this.artefactos = new ArrayList<>(nivel.getArtefactos());
         this.simbolos = new ArrayList<>(nivel.getSimbolosPregunta());
@@ -66,20 +77,14 @@ private Jugador jugador;
         }
     }
 
-    /**
-     * Verifica colisiones entre el jugador y los elementos del juego:
-     * enemigos, artefactos y símbolos de pregunta.
-     */
     public void verificarColisiones() {
-        // Colisión con enemigos
         for (Enemigo enemigo : enemigos) {
             if (enemigo != null && enemigo.isVisible() && colision(jugador, enemigo)) {
-                jugador.reducirVida(10);
+                jugador.reducirVida(5);
                 enemigo.setVisible(false);
             }
         }
 
-        // Colisión con artefactos
         for (Artefacto artefacto : artefactos) {
             if (artefacto != null && artefacto.isVisible() && !artefacto.isRecolectado() && colision(jugador, artefacto)) {
                 artefacto.setRecolectado(true);
@@ -92,7 +97,6 @@ private Jugador jugador;
             }
         }
 
-        // Colisión con símbolos
         for (SimboloPregunta simbolo : simbolos) {
             if (simbolo != null && simbolo.isVisible() &&
                 simbolo.verificarColision(jugador.getX(), jugador.getY(), jugador.getAncho(), jugador.getAlto())) {
@@ -108,9 +112,6 @@ private Jugador jugador;
         }
     }
 
-    /**
-     * Mueve todos los enemigos visibles.
-     */
     public void moverEnemigos() {
         for (Enemigo enemigo : enemigos) {
             if (enemigo != null && enemigo.isVisible()) {
@@ -123,12 +124,6 @@ private Jugador jugador;
         return jugador;
     }
 
-    /**
-     * Verifica si hay colisión entre dos sprites.
-     * @param a Sprite A
-     * @param b Sprite B
-     * @return true si hay colisión.
-     */
     private boolean colision(Sprite a, Sprite b) {
         return a != null && b != null && a.getBounds().intersects(b.getBounds());
     }
