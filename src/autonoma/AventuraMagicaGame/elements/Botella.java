@@ -27,7 +27,7 @@ public class Botella extends Artefacto {
     /**
      * Ruta de la imagen utilizada para representar la botella.
      */
-    private static final String RUTA = "/autonoma/AventuraMagica/images/botella.png";
+    private static final String RUTA = "/autonoma/AventuraMagicaGame/images/Botella.png";
 
     /**
      * Crea una nueva botella en la posición indicada.

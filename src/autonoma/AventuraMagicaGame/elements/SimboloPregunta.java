@@ -12,7 +12,7 @@ public class SimboloPregunta extends Sprite {
 
     private static final int ANCHO = 48;  
     private static final int ALTO = 48;
-    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagica/images/Signo.png";
+    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagicaGame/images/Signo.png";
 
     /**
      * Crea un nuevo símbolo de pregunta.

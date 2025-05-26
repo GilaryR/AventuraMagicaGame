@@ -12,7 +12,7 @@ package autonoma.AventuraMagicaGame.elements;
 public class Frailejon extends Enemigo {
     private static final int ANCHO = 50;
     private static final int ALTO = 70;
-    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagica/images/frailejon.png";
+    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagicaGame/images/Frailejon.png";
 
     public Frailejon(int x, int y) {
         super(x, y, RUTA_IMAGEN, ANCHO, ALTO);

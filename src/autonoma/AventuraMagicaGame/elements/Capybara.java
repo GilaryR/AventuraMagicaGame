@@ -24,7 +24,7 @@ public class Capybara extends Enemigo {
     /**
      * Ruta de la imagen que representa visualmente a la capybara.
      */
-    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagica/images/capybara.png";
+    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagicaGame/images/Capybara.png";
 
     /**
      * Constructor de la clase Capybara.

@@ -22,7 +22,7 @@ public class Cuy extends Enemigo {
     private static final int ALTO_CUY = 30;
 
     /** Ruta del recurso de imagen del cuy. */
-    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagica/images/cuy.png";
+    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagicaGame/images/Cuy.png";
 
     /**
      * Crea una nueva instancia de Cuy en la posición dada.

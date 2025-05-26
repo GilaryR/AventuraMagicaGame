@@ -14,7 +14,7 @@ public class Jugador extends Sprite {
 
     private static final int ANCHO_JUGADOR = 48;
     private static final int ALTO_JUGADOR = 48;
-    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagica/images/jugador.png";
+    private static final String RUTA_IMAGEN = "/autonoma/AventuraMagicaGame/images/Jugador.png";
 
     public Jugador(int x, int y) {
         super(x, y, RUTA_IMAGEN, ANCHO_JUGADOR, ALTO_JUGADOR);

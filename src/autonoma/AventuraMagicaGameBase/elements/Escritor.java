@@ -1,6 +1,8 @@
 
 package autonoma.AventuraMagicaGameBase.elements;
 
+import autonoma.AventuraMagicaGame.exceptions.EscrituraExcepcion;
+
 /**
  *
  * @author jgiugtiñut
