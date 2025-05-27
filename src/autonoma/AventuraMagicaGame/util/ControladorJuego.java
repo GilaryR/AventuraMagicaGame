@@ -1,6 +1,5 @@
 package autonoma.AventuraMagicaGame.util;
 
-
 import autonoma.AventuraMagicaGame.elements.Artefacto;
 import autonoma.AventuraMagicaGame.elements.Botella;
 import autonoma.AventuraMagicaGame.elements.Enemigo;
@@ -17,15 +16,12 @@ import java.util.List;
 /**
  * Clase que gestiona la lógica principal del juego para un nivel específico.
  * Controla el jugador, enemigos, artefactos, símbolos de pregunta y sus interacciones.
- * @author Alejandra ortega 
+ * @author Alejandra Ortega 
  * @since 26-05-2025
- * @version 2.0
- * @author Gilary Rugeles
  * @version 3.0
  */
- 
 public class ControladorJuego {
-   private Jugador jugador;
+    private Jugador jugador;
     private Nivel nivel;
     private List<Enemigo> enemigos;
     private List<Artefacto> artefactos;
@@ -43,11 +39,10 @@ public class ControladorJuego {
         this.nivel = nivel;
         this.jugador = new Jugador(400, 500);
 
-        // Notificamos al nivel la posición del jugador para evitar colisiones
         if (nivel instanceof NivelBase) {
             ((NivelBase) nivel).setJugador(jugador);
-            ((NivelBase) nivel).generarElementos(); // <<--- llamado manual
-            ((NivelBase) nivel).generarSimbolosPregunta(); // <<--- llamado manual
+            ((NivelBase) nivel).generarElementos();
+            ((NivelBase) nivel).generarSimbolosPregunta();
         }
 
         this.enemigos = new ArrayList<>(nivel.getEnemigos());
@@ -90,6 +85,7 @@ public class ControladorJuego {
             if (enemigo != null && enemigo.isVisible() && colision(jugador, enemigo)) {
                 jugador.reducirVida(5);
                 enemigo.setVisible(false);
+                ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/ColisionJugador.wav");
             }
         }
 
@@ -99,8 +95,10 @@ public class ControladorJuego {
 
                 if (artefacto instanceof Botella) {
                     jugador.recolectarBotella();
+                    ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/Botella.wav");
                 } else if (artefacto instanceof Esmeralda) {
                     jugador.recolectarEsmeralda();
+                    ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/Esmeralda.wav");
                 }
             }
         }
