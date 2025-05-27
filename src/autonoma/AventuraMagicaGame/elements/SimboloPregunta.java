@@ -141,7 +141,7 @@ public class SimboloPregunta extends Sprite {
      * @param alto El alto del otro rectángulo
      * @return true si hay colisión
      */
-    boolean verificarColision(int x, int y, int ancho, int alto) {
+    public boolean verificarColision(int x, int y, int ancho, int alto) {
         Rectangle rectSimbolo = new Rectangle(this.x, this.y, this.getAncho(), this.getAlto());
         Rectangle rectOtro = new Rectangle(x, y, ancho, alto);
         return rectSimbolo.intersects(rectOtro);

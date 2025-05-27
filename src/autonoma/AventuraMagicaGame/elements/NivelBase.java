@@ -180,6 +180,7 @@ public abstract class NivelBase implements Nivel {
                 List<Acertijo> acertijos = new ArrayList<>();
                 acertijos.add(new Acertijo("¿Capital de Colombia?", "Bogotá"));
                 acertijos.add(new Acertijo("2 + 2 * 2 =", "6"));
+                
 
                 SimboloPregunta simbolo = new SimboloPregunta(x, y, acertijos);
                 if (!colisionaConExistentes(simbolo)) {
