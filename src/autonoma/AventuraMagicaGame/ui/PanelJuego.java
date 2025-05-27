@@ -102,15 +102,16 @@ public void actualizarJuego() throws SonidoNoEncontradoException {
         // ✅ Verificar si el jugador perdió
         Jugador jugador = controlador.getJugador();
         if (jugador != null && jugador.getVidas() <= 0) {
-            ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/GameOver.wav");  // Lanza la excepción si no se encuentra
+            ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/GameOver.wav");
             mostrarPantallaGameOver();
         }
     }
 }
 
+
 private void mostrarPantallaGameOver() {
     JOptionPane.showMessageDialog(this, "¡Game Over! Te has quedado sin vidas.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
-    System.exit(0);  // O vuelve al menú principal si tienes uno
+    System.exit(0); 
 }
 
 

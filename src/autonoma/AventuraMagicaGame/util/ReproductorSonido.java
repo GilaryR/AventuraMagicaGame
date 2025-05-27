@@ -1,23 +1,33 @@
 package autonoma.AventuraMagicaGame.util;
 
 import javax.sound.sampled.*;
-import java.io.File;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
 
 public class ReproductorSonido {
-    public static void reproducir(String ruta) {
+
+    public static void reproducir(String rutaRecurso) {
         try {
-            File archivoSonido = new File(ruta);
-            if (!archivoSonido.exists()) {
-                System.err.println("Archivo de sonido no encontrado: " + ruta);
+            // Cargar el recurso de sonido desde el classpath
+            InputStream input = ReproductorSonido.class.getResourceAsStream(rutaRecurso);
+            if (input == null) {
+                System.err.println("No se encontró el archivo de sonido: " + rutaRecurso);
                 return;
             }
 
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(archivoSonido);
+            // Mejor rendimiento al envolver en BufferedInputStream
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(input));
+
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
+
+        } catch (UnsupportedAudioFileException e) {
+            System.err.println("Formato de archivo no compatible: " + e.getMessage());
+        } catch (LineUnavailableException e) {
+            System.err.println("Línea de audio no disponible: " + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error al reproducir sonido: " + e.getMessage());
         }
     }
 }
