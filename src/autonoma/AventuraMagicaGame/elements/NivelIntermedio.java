@@ -7,7 +7,7 @@ public class NivelIntermedio extends NivelBase {
 
     public NivelIntermedio() {
         super();
-        setFondo("/recursos/fondoIntermedio.png");  // Ruta del fondo para nivel intermedio
+        setFondo("/autonoma/AventuraMagicaGame/images/fondoIntermedio.jpg");  // Ruta del fondo para nivel intermedio
     }
 
     @Override

@@ -7,7 +7,7 @@ public class NivelFacil extends NivelBase {
 
     public NivelFacil() {
         super();
-        setFondo("/recursos/fondoFacil.png");  // Ruta del fondo para nivel fácil
+        setFondo("/autonoma/AventuraMagicaGame/images/fondoFacil.jpg");  
     }
 
     @Override

@@ -15,7 +15,7 @@ public class NivelDificil extends NivelBase {
 
     public NivelDificil() {
         super();
-        setFondo("/recursos/fondoDificil.png"); // Asegúrate de tener esta imagen en tu carpeta resources
+        setFondo("/autonoma/AventuraMagicaGame/images/fondoDificil.jpg"); // Asegúrate de tener esta imagen en tu carpeta resources
     }
 
     @Override

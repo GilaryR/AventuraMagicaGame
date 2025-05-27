@@ -15,47 +15,47 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class PanelJuego extends JPanel {
+
     private Image fondo;
     private HiloJuego hiloJuego;
     private HiloProgresoNivel hiloProgreso;
     private int puntaje;
-    private Nivel nivel;  
+    private Nivel nivel;
     private GestorNivel gestorNivel;
     private ControladorJuego controlador;
     boolean pausa;
 
-        public PanelJuego() {
+    public PanelJuego() {
         this.gestorNivel = new GestorNivel();
         this.nivel = gestorNivel.getNivelActual();
         this.controlador = new ControladorJuego(nivel);
-        actualizarFondo();        
         this.puntaje = 0;
         this.pausa = false;
+
+        actualizarFondo();
+
+        setFocusable(true);
+        setPreferredSize(new Dimension(800, 600));
+        configurarControles();
 
         addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
                 requestFocusInWindow();
             }
         });
+
+        iniciarHilos();
     }
 
     private void actualizarFondo() {
         if (nivel != null && nivel.getFondo() != null) {
             this.fondo = nivel.getFondo();
         } else {
-            // Fondo por defecto
             this.fondo = new ImageIcon(getClass().getResource("/autonoma/AventuraMagicaGame/images/Fondo.jpg")).getImage();
         }
     }
 
-    public void setNivel(NivelBase nuevoNivel) {
-        this.nivel = nuevoNivel;
-        this.controlador.setNivel(nuevoNivel);
-        actualizarFondo();
-        repaint();
-    
-
-        // Hilos (asegúrate que sólo se inician una vez)
+    private void iniciarHilos() {
         this.hiloJuego = new HiloJuego(this);
         this.hiloJuego.start();
 
@@ -65,11 +65,6 @@ public class PanelJuego extends JPanel {
             this::cargarSiguienteNivel
         );
         this.hiloProgreso.start();
-
-        setFocusable(true);
-        setPreferredSize(new Dimension(800, 600));
-
-        configurarControles();
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -109,89 +104,100 @@ private void configurarControles() {
         });
     }
 
-public void actualizarJuego() throws SonidoNoEncontradoException {
-    if (!pausa && controlador != null) {
-        controlador.moverEnemigos();
-        controlador.verificarColisiones();
-        repaint();
+    public void actualizarJuego() throws SonidoNoEncontradoException {
+        if (!pausa && controlador != null) {
+            controlador.moverEnemigos();
+            controlador.verificarColisiones();
+            repaint();
 
-        // ✅ Verificar si el jugador perdió
-        Jugador jugador = controlador.getJugador();
-        if (jugador != null && jugador.getVidas() <= 0) {
-            ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/GameOver.wav");
-            mostrarPantallaGameOver();
+            Jugador jugador = controlador.getJugador();
+            if (jugador != null && jugador.getVidas() <= 0) {
+                ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/GameOver.wav");
+                mostrarPantallaGameOver();
+            }
         }
     }
-}
 
-
-private void mostrarPantallaGameOver() {
-    JOptionPane.showMessageDialog(this, "¡Game Over! Te has quedado sin vidas.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
-    System.exit(0); 
-}
-
-
-
-  
-private void cargarSiguienteNivel() {
-    // Mostrar mensaje de nivel completado
-    JOptionPane.showMessageDialog(this,
-        "¡Nivel " + gestorNivel.getNumeroNivel() + " completado!",
-        "Nivel Completado",
-        JOptionPane.INFORMATION_MESSAGE);
-
-    // Verificar si es el último nivel (nivel 3 completado)
-    if (gestorNivel.esUltimoNivel()) {
-        mostrarPantallaVictoria();
-        detenerJuego();
-        return;
+    private void verificarAvanceNivel() {
+        if (controlador.getJugador().getBotellasRecolectadas() >= nivel.getArtefactosRequeridos()) {
+            cargarSiguienteNivel();
+        }
     }
 
-    // Guardar estado persistente del jugador
-    int vidas = controlador.getJugador().getVidas();  
-    int puntaje = controlador.getJugador().getPuntaje();
+    private void cargarSiguienteNivel() {
+        JOptionPane.showMessageDialog(this,
+            "¡Nivel " + gestorNivel.getNumeroNivel() + " completado!",
+            "Nivel Completado",
+            JOptionPane.INFORMATION_MESSAGE);
 
-    // Avanzar al siguiente nivel
-    gestorNivel.avanzarNivel();
-    nivel = gestorNivel.getNivelActual();
-    controlador = new ControladorJuego(nivel);
+        if (gestorNivel.esUltimoNivel()) {
+            mostrarPantallaVictoria();
+            detenerJuego();
+            return;
+        }
 
-    // Restaurar estado persistente
-    controlador.getJugador().setVidas(vidas);     
-    controlador.getJugador().setPuntaje(puntaje);
+        int vidas = controlador.getJugador().getVidas();
+        int puntajeJugador = controlador.getJugador().getPuntaje();
 
-    // Reiniciar contador de botellas para el nuevo nivel
-    controlador.getJugador().resetearBotellas();
-
-    repaint();
-}
-
-
-  public void verificarAvanceNivel() {
-    if (controlador.getJugador().getBotellasRecolectadas() >= 
-        nivel.getArtefactosRequeridos()) {
-        cargarSiguienteNivel();
+        gestorNivel.avanzarNivel();
+        this.nivel = gestorNivel.getNivelActual();
+        this.controlador = new ControladorJuego(nivel);
+        this.controlador.getJugador().setVidas(vidas);
+        this.controlador.getJugador().setPuntaje(puntajeJugador);
+        this.controlador.getJugador().resetearBotellas();
+        actualizarFondo();
+        repaint();
     }
-}
-    
+
+    public void setNivel(NivelBase nuevoNivel) {
+        this.nivel = nuevoNivel;
+        this.controlador.setNivel(nuevoNivel);
+        actualizarFondo();
+        repaint();
+    }
+
+    public void detenerJuego() {
+        hiloJuego.detener();
+        hiloProgreso.detener();
+    }
+
+    private void mostrarPantallaGameOver() {
+        JOptionPane.showMessageDialog(this,
+            "¡Game Over! Te has quedado sin vidas.",
+            "Fin del Juego",
+            JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0);
+    }
+
+    private void mostrarPantallaVictoria() {
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(
+                null,
+                "¡Felicidades! Has ganado el juego 🎉",
+                "Victoria",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            System.exit(0);
+        });
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-       if (fondo != null) {
+
+        // Dibujar fondo
+        if (fondo != null) {
             g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
         }
-        
-        // Dibujar elementos del juego
+
+        // Dibujar elementos
         controlador.dibujarArtefactos(g);
         controlador.dibujarEnemigos(g);
         controlador.dibujarSimbolos(g);
         controlador.dibujarJugador(g);
-        
-        // Dibujar HUD (información del juego)
+
+        // HUD y pausa
         dibujarHUD(g);
-        
-        // Dibujar mensaje de pausa si es necesario
         if (pausa) {
             dibujarMensajePausa(g);
         }
@@ -200,50 +206,25 @@ private void cargarSiguienteNivel() {
     private void dibujarHUD(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
-        
-        // Información del nivel
         g.drawString("Nivel: " + gestorNivel.getNumeroNivel(), 20, 20);
-        g.drawString("Puntaje: " + puntaje, 20, 45);
+        g.drawString("Puntaje: " + controlador.getJugador().getPuntaje(), 20, 45);
         g.drawString("Vidas: " + controlador.getJugador().getVidas(), 20, 70);
-        
-        // Progreso del nivel
-        int recolectados = controlador.getJugador().getBotellasRecolectadas();
-        int requeridos = gestorNivel.getNivelActual().getArtefactosRequeridos();
-        g.drawString("Artefactos: " + recolectados + "/" + requeridos, 20, 95);
+        g.drawString("Artefactos: " +
+                controlador.getJugador().getBotellasRecolectadas() + "/" +
+                nivel.getArtefactosRequeridos(), 20, 95);
     }
 
     private void dibujarMensajePausa(Graphics g) {
         g.setColor(new Color(0, 0, 0, 150));
         g.fillRect(0, 0, getWidth(), getHeight());
-        
+
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 48));
-        
         String mensaje = "PAUSA";
         FontMetrics fm = g.getFontMetrics();
         int x = (getWidth() - fm.stringWidth(mensaje)) / 2;
         int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-        
         g.drawString(mensaje, x, y);
-    }
-
-    public void detenerJuego() {
-        hiloJuego.detener();
-        hiloProgreso.detener();   
-    }
-    
-    private void mostrarPantallaVictoria() {
-    javax.swing.SwingUtilities.invokeLater(() -> {
-        javax.swing.JOptionPane.showMessageDialog(
-            null,
-            "¡Felicidades! Has ganado el juego 🎉",
-            "Victoria",
-            javax.swing.JOptionPane.INFORMATION_MESSAGE
-        );
-        // Opcional: salir del juego o reiniciarlo
-        System.exit(0);  // Cierra la aplicación
-        // O podrías reiniciar el juego si quieres
-    });
     }
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables
