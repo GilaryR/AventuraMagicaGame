@@ -37,8 +37,4 @@ public class NivelIntermedio extends NivelBase {
         return 40;
     }
 
-    @Override
-    public int size() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

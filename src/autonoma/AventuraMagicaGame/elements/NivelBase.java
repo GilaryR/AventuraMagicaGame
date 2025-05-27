@@ -178,5 +178,9 @@ protected List<Acertijo> obtenerAcertijos() {
     public int getArtefactosRequeridos() {
         return artefactosRequeridos();
     }
+        @Override
+    public int size() {
+        return getEnemigos().size() + getArtefactos().size();
+    }
 }
 

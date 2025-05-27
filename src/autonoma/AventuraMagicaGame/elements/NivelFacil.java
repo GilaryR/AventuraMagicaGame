@@ -36,8 +36,4 @@ public class NivelFacil extends NivelBase {
         return 20;
     }
 
-    @Override
-    public int size() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

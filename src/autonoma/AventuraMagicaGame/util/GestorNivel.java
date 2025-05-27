@@ -139,4 +139,7 @@ public class GestorNivel {
         return botellasRequeridasPorNivel[numeroNivel - 1];
     
     }
+    public int getCantidadNiveles() {
+        return niveles.size(); // la cantidad total de niveles cargados
+    }
 }

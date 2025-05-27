@@ -15,7 +15,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class PanelJuego extends JPanel {
-
     private Image fondo;
     private HiloJuego hiloJuego;
     private HiloProgresoNivel hiloProgreso;
@@ -23,12 +22,12 @@ public class PanelJuego extends JPanel {
     private Nivel nivel;
     private GestorNivel gestorNivel;
     private ControladorJuego controlador;
-    boolean pausa;
-
-    public PanelJuego() {
+    private boolean pausa;
+    
+    public PanelJuego(NivelBase nivelBase) {
         this.gestorNivel = new GestorNivel();
-        this.nivel = gestorNivel.getNivelActual();
-        this.controlador = new ControladorJuego(nivel);
+        this.nivel = (Nivel) nivelBase;  // casteo seguro, asumiendo que NivelBase es base de Nivel
+        this.controlador = new ControladorJuego((NivelBase) this.nivel);
         this.puntaje = 0;
         this.pausa = false;
 
@@ -46,7 +45,6 @@ public class PanelJuego extends JPanel {
 
         iniciarHilos();
     }
-
     private void actualizarFondo() {
         if (nivel != null && nivel.getFondo() != null) {
             this.fondo = nivel.getFondo();
@@ -66,6 +64,9 @@ public class PanelJuego extends JPanel {
         );
         this.hiloProgreso.start();
     }
+
+    // Variables declaration - do not modify                     
+    // End of variables declaration
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -80,7 +81,7 @@ public class PanelJuego extends JPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-private void configurarControles() {
+   private void configurarControles() {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -141,7 +142,7 @@ private void configurarControles() {
 
         gestorNivel.avanzarNivel();
         this.nivel = gestorNivel.getNivelActual();
-        this.controlador = new ControladorJuego(nivel);
+        this.controlador = new ControladorJuego((NivelBase) this.nivel);
         this.controlador.getJugador().setVidas(vidas);
         this.controlador.getJugador().setPuntaje(puntajeJugador);
         this.controlador.getJugador().resetearBotellas();
@@ -149,16 +150,9 @@ private void configurarControles() {
         repaint();
     }
 
-    public void setNivel(NivelBase nuevoNivel) {
-        this.nivel = nuevoNivel;
-        this.controlador.setNivel(nuevoNivel);
-        actualizarFondo();
-        repaint();
-    }
-
     public void detenerJuego() {
-        hiloJuego.detener();
-        hiloProgreso.detener();
+        if (hiloJuego != null) hiloJuego.detener();
+        if (hiloProgreso != null) hiloProgreso.detener();
     }
 
     private void mostrarPantallaGameOver() {
@@ -185,18 +179,15 @@ private void configurarControles() {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Dibujar fondo
         if (fondo != null) {
             g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
         }
 
-        // Dibujar elementos
         controlador.dibujarArtefactos(g);
         controlador.dibujarEnemigos(g);
         controlador.dibujarSimbolos(g);
         controlador.dibujarJugador(g);
 
-        // HUD y pausa
         dibujarHUD(g);
         if (pausa) {
             dibujarMensajePausa(g);
@@ -227,5 +218,6 @@ private void configurarControles() {
         g.drawString(mensaje, x, y);
     }
 }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

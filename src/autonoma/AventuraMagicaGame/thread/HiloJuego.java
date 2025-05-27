@@ -29,11 +29,13 @@ public class HiloJuego extends Thread {
                 panelJuego.actualizarJuego();
                 panelJuego.repaint();
                 Thread.sleep(100); // 10 actualizaciones por segundo
-            } catch (InterruptedException e) {
+            }catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (SonidoNoEncontradoException ex) {
                 Logger.getLogger(HiloJuego.class.getName()).log(Level.SEVERE, null, ex);
             }
+            // Manejo de excepción
+            
         }
     }
 }

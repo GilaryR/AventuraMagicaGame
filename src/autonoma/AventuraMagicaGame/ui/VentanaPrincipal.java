@@ -1,4 +1,4 @@
-package autonoma.AventuraMagicaGame.ui;
+/*package autonoma.AventuraMagicaGame.ui;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -6,24 +6,27 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class VentanaPrincipal extends javax.swing.JFrame {
+
     private PanelJuego panelJuego;
 
     public VentanaPrincipal() {
+        initComponents();
+
         setTitle("Aventura Mágica");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(820, 640);  // tamaño ventana
-        setLocationRelativeTo(null);  // centra la ventana
 
         // Crear y añadir el panel de juego
         panelJuego = new PanelJuego();
-        add(panelJuego);
-
-        // Crear menú simple
-        crearMenu();
+        getContentPane().add(panelJuego);
 
         // Para que el panel pueda recibir el foco y escuchar teclas
         panelJuego.requestFocusInWindow();
 
+        // Crear menú simple
+        crearMenu();
+
+        setSize(820, 640);
+        setLocationRelativeTo(null);  // centra la ventana
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
@@ -51,7 +54,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         menuBar.add(menuJuego);
         setJMenuBar(menuBar);
     }
-   
+
+    private void initComponents() {
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        // No uses el GroupLayout automático vacío
+        // Se maneja todo manualmente con el panelJuego agregado en el constructor
+        // Por eso no configuramos layout aquí
+
+        pack();
+    }
+}
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -74,3 +87,4 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
+*/

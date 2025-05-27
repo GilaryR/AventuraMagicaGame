@@ -6,7 +6,7 @@ import autonoma.AventuraMagicaGame.elements.Jugador;
 
 
 public class HiloProgresoNivel extends Thread {
-    private final Jugador jugador;
+  private final Jugador jugador;
     private final GestorNivel gestor;
     private final Runnable alCompletarNivel;
     private volatile boolean enEjecucion;
@@ -17,22 +17,26 @@ public class HiloProgresoNivel extends Thread {
         this.gestor = gestor;
         this.alCompletarNivel = alCompletarNivel;
         this.enEjecucion = true;
-        this.setDaemon(true); // Hilo demonio para que no impida la salida de la aplicación
+        this.setDaemon(true); // Para que el hilo no impida cerrar la aplicación
     }
 
     @Override
     public void run() {
+        while (enEjecucion) {
             verificarProgreso();
             esperarIntervalo();
         }
+    }
 
     private void verificarProgreso() {
         int requeridos = gestor.getNivelActual().getArtefactosRequeridos();
         int recolectados = jugador.getBotellasRecolectadas() + jugador.getEsmeraldasRecolectadas();
-        
+
         if (recolectados >= requeridos) {
             reiniciarContadores();
-            avanzarNivel();
+            if (puedeAvanzarMas()) {
+                alCompletarNivel.run();  // Ejecutar acción para avanzar de nivel
+            }
         }
     }
 
@@ -40,15 +44,10 @@ public class HiloProgresoNivel extends Thread {
         jugador.setBotellasRecolectadas(0);
         jugador.setEsmeraldasRecolectadas(0);
     }
-public boolean avanzarNivel() {
-    if (puedeAvanzarMas()) {
-        int numeroNivel = 0;
-        numeroNivel++;
-        return true;
-    }
-    return false;
-}
 
+    private boolean puedeAvanzarMas() {
+        return gestor.getNumeroNivel() < gestor.getCantidadNiveles();
+    }
 
     private void esperarIntervalo() {
         try {
@@ -63,8 +62,4 @@ public boolean avanzarNivel() {
         enEjecucion = false;
         interrupt();
     }
-    private boolean puedeAvanzarMas() {
-    int numeroNivel = 0;
-    return numeroNivel < 3;
-}
 }

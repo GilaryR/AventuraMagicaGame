@@ -9,7 +9,7 @@ import java.util.List;
  * @author jgiugtiñut
  */
 
-public interface Nivel {
+public interface Nivel{
     List<Enemigo> getEnemigos();
     List<Artefacto> getArtefactos();
     List<SimboloPregunta> getSimbolosPregunta();

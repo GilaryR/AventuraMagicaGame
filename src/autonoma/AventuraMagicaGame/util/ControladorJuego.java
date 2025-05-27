@@ -21,17 +21,14 @@ import java.util.List;
  * @version 3.0
  */
 public class ControladorJuego {
+ 
     private Jugador jugador;
-    private Nivel nivel;
+    private NivelBase nivel;
     private List<Enemigo> enemigos;
     private List<Artefacto> artefactos;
     private List<SimboloPregunta> simbolos;
 
-    /**
-     * Constructor que inicializa el controlador con el nivel actual.
-     * @param nivel Nivel que contiene enemigos, artefactos y símbolos.
-     */
-    public ControladorJuego(Nivel nivel) {
+    public ControladorJuego(NivelBase nivel) {
         if (nivel == null) {
             throw new IllegalArgumentException("El nivel no puede ser nulo");
         }
@@ -39,17 +36,81 @@ public class ControladorJuego {
         this.nivel = nivel;
         this.jugador = new Jugador(400, 500);
 
-        if (nivel instanceof NivelBase) {
-            ((NivelBase) nivel).setJugador(jugador);
-            ((NivelBase) nivel).generarElementos();
-            ((NivelBase) nivel).generarSimbolosPregunta();
-        }
+        nivel.setJugador(jugador);
+        nivel.generarElementos();
+        nivel.generarSimbolosPregunta();
 
         this.enemigos = new ArrayList<>(nivel.getEnemigos());
         this.artefactos = new ArrayList<>(nivel.getArtefactos());
         this.simbolos = new ArrayList<>(nivel.getSimbolosPregunta());
     }
 
+    /** Movimiento del jugador */
+    public void moverJugador(int dx, int dy, int anchoPanel, int altoPanel) {
+        if (jugador != null) {
+            jugador.mover(dx, dy, anchoPanel, altoPanel);
+        }
+    }
+
+    /** Mueve a todos los enemigos visibles */
+    public void moverEnemigos() {
+        for (Enemigo enemigo : enemigos) {
+            if (enemigo != null && enemigo.isVisible()) {
+                enemigo.mover();
+            }
+        }
+    }
+
+    /** Verifica colisiones y actualiza estados */
+    public void verificarColisiones() {
+        colisionJugadorEnemigos();
+        colisionJugadorArtefactos();
+        colisionJugadorSimbolos();
+    }
+
+    private void colisionJugadorEnemigos() {
+        for (Enemigo enemigo : enemigos) {
+            if (enemigo != null && enemigo.isVisible() && colision(jugador, enemigo)) {
+                jugador.reducirVida(5);
+                enemigo.setVisible(false);
+                ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/ColisionJugador.wav");
+            }
+        }
+    }
+
+    private void colisionJugadorArtefactos() {
+        for (Artefacto artefacto : artefactos) {
+            if (artefacto != null && artefacto.isVisible() && !artefacto.isRecolectado() && colision(jugador, artefacto)) {
+                artefacto.setRecolectado(true);
+
+                if (artefacto instanceof Botella) {
+                    jugador.recolectarBotella();
+                    ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/Botella.wav");
+                } else if (artefacto instanceof Esmeralda) {
+                    jugador.recolectarEsmeralda();
+                    ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/Esmeralda.wav");
+                }
+            }
+        }
+    }
+
+    private void colisionJugadorSimbolos() {
+        for (SimboloPregunta simbolo : simbolos) {
+            if (simbolo != null && simbolo.isVisible() &&
+                simbolo.verificarColision(jugador.getX(), jugador.getY(), jugador.getAncho(), jugador.getAlto())) {
+
+                int puntos = simbolo.manejarColision();
+
+                if (puntos > 0) {
+                    jugador.aumentarPuntaje(puntos);
+                } else if (puntos < 0) {
+                    jugador.disminuirPuntaje(-puntos);
+                }
+            }
+        }
+    }
+
+    /** Dibuja los elementos en pantalla */
     public void dibujarJugador(Graphics g) {
         if (jugador != null) {
             jugador.dibujar(g);
@@ -80,61 +141,28 @@ public class ControladorJuego {
         }
     }
 
-    public void verificarColisiones() {
-        for (Enemigo enemigo : enemigos) {
-            if (enemigo != null && enemigo.isVisible() && colision(jugador, enemigo)) {
-                jugador.reducirVida(5);
-                enemigo.setVisible(false);
-                ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/ColisionJugador.wav");
-            }
+    /** Cambia el nivel actual y reinicia elementos */
+    public void setNivel(NivelBase nuevoNivel) {
+        if (nuevoNivel == null) {
+            throw new IllegalArgumentException("El nuevo nivel no puede ser nulo");
         }
+        this.nivel = nuevoNivel;
+        this.nivel.setJugador(jugador);
+        this.nivel.generarElementos();
+        this.nivel.generarSimbolosPregunta();
 
-        for (Artefacto artefacto : artefactos) {
-            if (artefacto != null && artefacto.isVisible() && !artefacto.isRecolectado() && colision(jugador, artefacto)) {
-                artefacto.setRecolectado(true);
-
-                if (artefacto instanceof Botella) {
-                    jugador.recolectarBotella();
-                    ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/Botella.wav");
-                } else if (artefacto instanceof Esmeralda) {
-                    jugador.recolectarEsmeralda();
-                    ReproductorSonido.reproducir("/autonoma/AventuraMagicaGame/sounds/Esmeralda.wav");
-                }
-            }
-        }
-
-        for (SimboloPregunta simbolo : simbolos) {
-            if (simbolo != null && simbolo.isVisible() &&
-                simbolo.verificarColision(jugador.getX(), jugador.getY(), jugador.getAncho(), jugador.getAlto())) {
-
-                int puntos = simbolo.manejarColision();
-
-                if (puntos > 0) {
-                    jugador.aumentarPuntaje(puntos);
-                } else if (puntos < 0) {
-                    jugador.disminuirPuntaje(-puntos);
-                }
-            }
-        }
-    }
-
-    public void moverEnemigos() {
-        for (Enemigo enemigo : enemigos) {
-            if (enemigo != null && enemigo.isVisible()) {
-                enemigo.mover();
-            }
-        }
+        this.enemigos = new ArrayList<>(nivel.getEnemigos());
+        this.artefactos = new ArrayList<>(nivel.getArtefactos());
+        this.simbolos = new ArrayList<>(nivel.getSimbolosPregunta());
     }
 
     public Jugador getJugador() {
         return jugador;
     }
 
+    /** Verifica si dos sprites colisionan */
     private boolean colision(Sprite a, Sprite b) {
-        return a != null && b != null && a.getBounds().intersects(b.getBounds());
-    }
-
-    public void setNivel(NivelBase nuevoNivel) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (a == null || b == null) return false;
+        return a.getBounds().intersects(b.getBounds());
     }
 }
