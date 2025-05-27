@@ -5,6 +5,7 @@ import autonoma.AventuraMagicaGame.util.ControladorJuego;
 import autonoma.AventuraMagicaGame.util.GestorNivel;
 import autonoma.AventuraMagicaGame.elements.Jugador;
 import autonoma.AventuraMagicaGame.elements.Nivel;
+import autonoma.AventuraMagicaGame.elements.NivelBase;
 import autonoma.AventuraMagicaGame.exceptions.SonidoNoEncontradoException;
 import autonoma.AventuraMagicaGame.thread.HiloJuego;
 import autonoma.AventuraMagicaGame.thread.HiloProgresoNivel;
@@ -27,17 +28,32 @@ public class PanelJuego extends JPanel {
         this.gestorNivel = new GestorNivel();
         this.nivel = gestorNivel.getNivelActual();
         this.controlador = new ControladorJuego(nivel);
-
-        this.fondo = new ImageIcon(getClass().getResource("/autonoma/AventuraMagicaGame/images/Fondo.jpg")).getImage();
+        actualizarFondo();        
         this.puntaje = 0;
         this.pausa = false;
 
-        // En vez de pedir foco aquí, usar listener para foco
         addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
                 requestFocusInWindow();
             }
         });
+    }
+
+    private void actualizarFondo() {
+        if (nivel != null && nivel.getFondo() != null) {
+            this.fondo = nivel.getFondo();
+        } else {
+            // Fondo por defecto
+            this.fondo = new ImageIcon(getClass().getResource("/autonoma/AventuraMagicaGame/images/Fondo.jpg")).getImage();
+        }
+    }
+
+    public void setNivel(NivelBase nuevoNivel) {
+        this.nivel = nuevoNivel;
+        this.controlador.setNivel(nuevoNivel);
+        actualizarFondo();
+        repaint();
+    
 
         // Hilos (asegúrate que sólo se inician una vez)
         this.hiloJuego = new HiloJuego(this);
@@ -162,8 +178,9 @@ private void cargarSiguienteNivel() {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        // Dibujar fondo
-        g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
+       if (fondo != null) {
+            g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
+        }
         
         // Dibujar elementos del juego
         controlador.dibujarArtefactos(g);

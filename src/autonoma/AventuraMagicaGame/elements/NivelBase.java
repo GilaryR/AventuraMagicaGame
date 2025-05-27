@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+
 
 /**
  * Clase abstracta base que implementa la interfaz Nivel y proporciona la funcionalidad
@@ -18,10 +21,11 @@ import java.util.Random;
  */
 public abstract class NivelBase implements Nivel {
 
-    protected List<Enemigo> enemigos;
-    protected List<Artefacto> artefactos;
-    protected List<SimboloPregunta> simbolos;
-    protected Jugador jugador;
+    private List<Enemigo> enemigos;
+    private List<Artefacto> artefactos;
+    private List<SimboloPregunta> simbolos;
+    private Jugador jugador;
+    private Image fondo;
 
     private static final int ANCHO_PANTALLA = 800;
     private static final int ALTO_PANTALLA = 600;
@@ -33,6 +37,15 @@ public abstract class NivelBase implements Nivel {
         artefactos = new ArrayList<>();
         simbolos = new ArrayList<>();
     }
+
+
+    public void setFondo(String rutaImagen) {
+    this.fondo = new ImageIcon(getClass().getResource(rutaImagen)).getImage();
+    }
+
+    public Image getFondo() {
+    return fondo;
+}   
 
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;

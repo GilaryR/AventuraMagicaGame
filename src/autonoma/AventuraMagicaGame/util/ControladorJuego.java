@@ -133,4 +133,8 @@ public class ControladorJuego {
     private boolean colision(Sprite a, Sprite b) {
         return a != null && b != null && a.getBounds().intersects(b.getBounds());
     }
+
+    public void setNivel(NivelBase nuevoNivel) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

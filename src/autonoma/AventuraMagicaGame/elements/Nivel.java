@@ -1,6 +1,7 @@
 
 package autonoma.AventuraMagicaGame.elements;
 
+import java.awt.Image;
 import java.util.List;
 
 /**
@@ -16,4 +17,6 @@ public interface Nivel {
     public int getArtefactosRequeridos();
 
     public int size();
+
+    public Image getFondo();
 }
