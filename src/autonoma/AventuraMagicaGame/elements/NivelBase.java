@@ -47,17 +47,20 @@ public abstract class NivelBase implements Nivel {
      * Puedes sobrescribir este método en los niveles concretos para cambiar los acertijos.
      */
    
-    protected List<Acertijo> obtenerAcertijos() {
+protected List<Acertijo> obtenerAcertijos() {
     List<Acertijo> lista = new ArrayList<>();
-    lista.add(new Acertijo("¿Animal símbolo de Colombia?", "Cóndor"));
-    lista.add(new Acertijo("¿En qué año fue la independencia de Colombia?", "1810"));
-    lista.add(new Acertijo("¿Qué significa 'parcero' en Colombia?", "Amigo"));
-    lista.add(new Acertijo("¿Cuál es el parque natural más grande de Colombia?", "Serranía de Chiribiquete"));
-    lista.add(new Acertijo("¿Qué animal es típico de los Llanos orientales?", "Capibara"));
-    lista.add(new Acertijo("¿Colombia tiene acceso a cuántos océanos?", "2"));
-    lista.add(new Acertijo("¿Cómo se llama la flor nacional de Colombia?", "Orquídea"));
+
+    lista.add(new Acertijo("¿Animal símbolo de Colombia?", "Cóndor", "condor"));
+    lista.add(new Acertijo("¿En qué año fue la independencia de Colombia?", "1810", "mil ochocientos diez"));
+    lista.add(new Acertijo("¿Qué significa 'parcero' en Colombia?", "Amigo", "Parce"));
+    lista.add(new Acertijo("¿Cuál es el parque natural más grande de Colombia?", "Serranía de Chiribiquete", "Chiribiquete"));
+    lista.add(new Acertijo("¿Qué animal es típico de los Llanos orientales?", "Capibara", "Chigüiro"));
+    lista.add(new Acertijo("¿Colombia tiene acceso a cuántos océanos?", "2", "dos"));
+    lista.add(new Acertijo("¿Cómo se llama la flor nacional de Colombia?", "Orquídea", "orquidea"));
+
     return lista;
 }
+
 
 
     public void generarElementos() {
@@ -163,3 +166,4 @@ public abstract class NivelBase implements Nivel {
         return artefactosRequeridos();
     }
 }
+

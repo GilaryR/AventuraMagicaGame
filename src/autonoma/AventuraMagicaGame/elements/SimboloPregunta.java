@@ -3,90 +3,92 @@ package autonoma.AventuraMagicaGame.elements;
 import autonoma.AventuraMagicaGameBase.elements.Sprite;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Random;
 import javax.swing.JOptionPane;
 
-/**
- * Representa un símbolo de pregunta en el juego, que activa acertijos al colisionar con el jugador.
- */
 public class SimboloPregunta extends Sprite {
-    private final List<Acertijo> acertijos;
+
+    private static List<Acertijo> acertijosGlobal; // Lista compartida entre todos los símbolos
     private boolean fueUsado = false;
 
-    private static final int ANCHO = 48;
+    private static final int ANCHO = 48;  
     private static final int ALTO = 48;
     private static final String RUTA_IMAGEN = "/autonoma/AventuraMagicaGame/images/Signo.png";
 
     /**
      * Crea un nuevo símbolo de pregunta.
-     *
-     * @param x coordenada x inicial (mínimo 100)
-     * @param y coordenada y inicial
-     * @param acertijos lista de acertijos asociados
+     * 
+     * @param x Coordenada X
+     * @param y Coordenada Y
+     * @param acertijosIniciales Lista inicial de acertijos (solo una vez)
      */
-    public SimboloPregunta(int x, int y, List<Acertijo> acertijos) {
+    public SimboloPregunta(int x, int y, List<Acertijo> acertijosIniciales) {
         super(Math.max(x, 100), y, RUTA_IMAGEN, ANCHO, ALTO);
-        this.acertijos = Objects.requireNonNull(acertijos, "La lista de acertijos no puede ser null");
+        if (acertijosGlobal == null) {
+            acertijosGlobal = new ArrayList<>(acertijosIniciales); // Copiar solo la primera vez
+        }
     }
 
     /**
-     * Verifica si colisiona con el rectángulo del jugador.
-     *
-     * @param jugadorBounds El rectángulo del jugador
-     * @return true si hay colisión y el símbolo es visible
+     * Verifica colisión con el jugador.
+     * 
+     * @param jugadorBounds Rectángulo del jugador
+     * @return true si colisiona
      */
-    public final boolean verificarColision(Rectangle jugadorBounds) {
+    public boolean verificarColision(Rectangle jugadorBounds) {
         return getBounds().intersects(jugadorBounds) && isVisible();
     }
 
     /**
-     * Maneja la colisión con el jugador, mostrando acertijos.
-     *
-     * @return Puntos obtenidos (10 si acierta, -5 si falla, 0 si ya fue usado)
+     * Maneja la colisión mostrando acertijos y otorgando puntos.
+     * 
+     * @return Puntos ganados (+10 si correcto, -5 si incorrecto, 0 si ya fue usado)
      */
-    public final int manejarColision() {
+    public int manejarColision() {
         if (!fueUsado && isVisible()) {
-            boolean correcto = mostrarYValidar();
+            boolean acierto = mostrarUnAcertijoAleatorio();
             fueUsado = true;
             setVisible(false);
-            return correcto ? 10 : -5;
+            return acierto ? 10 : -5; // también puedes sumar vidas aparte si acierta
         }
         return 0;
     }
 
     /**
-     * Muestra los acertijos y valida las respuestas del jugador.
-     *
-     * @return true si todas las respuestas son correctas
+     * Muestra una pregunta aleatoria y la elimina de la lista global si fue usada.
+     * 
+     * @return true si la respuesta fue correcta
      */
-    private boolean mostrarYValidar() {
-        for (Acertijo acertijo : acertijos) {
-            String respuesta = JOptionPane.showInputDialog(
-                    null,
-                    acertijo.getPregunta(),
-                    "Acertijo",
-                    JOptionPane.QUESTION_MESSAGE
-            );
+    private boolean mostrarUnAcertijoAleatorio() {
+        if (acertijosGlobal == null || acertijosGlobal.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "¡Ya no quedan preguntas!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
 
-            if (respuesta == null || respuesta.trim().isEmpty() || !acertijo.verificar(respuesta.trim())) {
-                JOptionPane.showMessageDialog(null, "¡Incorrecto!", "Fallaste", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
+        Random random = new Random();
+        int indice = random.nextInt(acertijosGlobal.size());
+        Acertijo acertijo = acertijosGlobal.remove(indice); // eliminar para que no se repita
+
+        String respuesta = JOptionPane.showInputDialog(null,
+                acertijo.getPregunta(), "Acertijo", JOptionPane.QUESTION_MESSAGE);
+
+        if (respuesta == null || respuesta.trim().isEmpty() || !acertijo.verificar(respuesta.trim())) {
+            JOptionPane.showMessageDialog(null, "¡Incorrecto!", "Fallaste", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
 
         JOptionPane.showMessageDialog(null, "¡Correcto!", "Acertaste", JOptionPane.INFORMATION_MESSAGE);
+        // Aquí podrías sumar una vida al jugador si gestionas vidas desde otra clase
         return true;
     }
 
-    public boolean fueUsado() {
-        return fueUsado;
-    }
-
-    public void setUsado(boolean usado) {
-        this.fueUsado = usado;
-    }
-
+    /**
+     * Dibuja el símbolo si es visible.
+     * 
+     * @param g Contexto gráfico
+     */
     @Override
     public void dibujar(Graphics g) {
         if (isVisible()) {
@@ -94,14 +96,31 @@ public class SimboloPregunta extends Sprite {
         }
     }
 
+    /**
+     * Mueve el símbolo hacia abajo.
+     * 
+     * @param dy Cantidad de píxeles
+     */
     public void moverHaciaAbajo(int dy) {
         this.y += dy;
     }
 
+    /**
+     * Verifica si el símbolo está fuera de la pantalla.
+     * 
+     * @param alturaVentana Altura de la ventana
+     * @return true si salió de la pantalla
+     */
     public boolean fueraDePantalla(int alturaVentana) {
         return y > alturaVentana;
     }
 
+    /**
+     * Reinicia el símbolo en nueva posición y visible.
+     * 
+     * @param nuevaX Coordenada x
+     * @param nuevaY Coordenada y
+     */
     public void reiniciar(int nuevaX, int nuevaY) {
         this.x = Math.max(nuevaX, 100);
         this.y = nuevaY;
@@ -113,8 +132,25 @@ public class SimboloPregunta extends Sprite {
         return new Rectangle(x, y, getAncho(), getAlto());
     }
 
+    public boolean fueUsado() {
+        return fueUsado;
+    }
+
+    public void setUsado(boolean usado) {
+        this.fueUsado = usado;
+    }
+
+    /**
+     * Verifica colisión con coordenadas de otro rectángulo.
+     * 
+     * @param x coordenada x
+     * @param y coordenada y
+     * @param ancho ancho del rectángulo
+     * @param alto alto del rectángulo
+     * @return true si colisionan
+     */
     public boolean verificarColision(int x, int y, int ancho, int alto) {
-        Rectangle rectSimbolo = getBounds();
+        Rectangle rectSimbolo = new Rectangle(this.x, this.y, getAncho(), getAlto());
         Rectangle rectOtro = new Rectangle(x, y, ancho, alto);
         return rectSimbolo.intersects(rectOtro);
     }
