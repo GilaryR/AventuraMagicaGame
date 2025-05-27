@@ -93,6 +93,9 @@ public class Jugador extends Sprite {
         aumentarBotellasRecolectadas(1);
         aumentarPuntaje(5);
     }
+    public boolean objetivoBotellasAlcanzado(int botellasRequeridas) {
+    return botellasRecolectadas >= botellasRequeridas;
+    }
 
     public void recolectarEsmeralda() {
         aumentarEsmeraldasRecolectadas(1);

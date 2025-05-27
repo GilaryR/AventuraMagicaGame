@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package autonoma.AventuraMagicaGameBase.elements;
 
 import java.awt.Graphics;
@@ -34,24 +31,24 @@ public class Sprite {
         try {
             ImageIcon icon = new ImageIcon(getClass().getResource(rutaImagen));
             Image imgOriginal = icon.getImage();
-            
-            // Escalar la imagen al tamaño deseado
-            this.imagen = imgOriginal.getScaledInstance(
-                ancho, 
-                alto, 
-                Image.SCALE_SMOOTH);
+            this.imagen = imgOriginal.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
         } catch (Exception e) {
             System.err.println("Error al cargar imagen: " + rutaImagen);
             e.printStackTrace();
-            // Crear imagen de respaldo
             this.imagen = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_ARGB);
         }
     }
 
     public void dibujar(Graphics g) {
-        if (visible && imagen != null) {
+    if (visible && imagen != null) {
+        int panelWidth = 800;  // o pásalo como parámetro si cambia
+        int panelHeight = 600;
+
+        // Solo dibujar si está completamente dentro del área visible
+        if (x >= 0 && y >= 0 && x + ancho <= panelWidth && y + alto <= panelHeight) {
             g.drawImage(imagen, x, y, null);
         }
+    }
     }
 
     public int getX() {
@@ -62,12 +59,22 @@ public class Sprite {
         this.x = x;
     }
 
+    // Nueva versión con control de límites
+    public void setX(int x, int limiteAnchoPanel) {
+        this.x = Math.max(0, Math.min(x, limiteAnchoPanel - ancho));
+    }
+
     public int getY() {
         return y;
     }
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    // Nueva versión con control de límites
+    public void setY(int y, int limiteAltoPanel) {
+        this.y = Math.max(0, Math.min(y, limiteAltoPanel - alto));
     }
 
     public Image getImagen() {
@@ -101,8 +108,8 @@ public class Sprite {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
+
     public Rectangle getBounds() {
         return new Rectangle(x, y, ancho, alto);
-
     }
 }

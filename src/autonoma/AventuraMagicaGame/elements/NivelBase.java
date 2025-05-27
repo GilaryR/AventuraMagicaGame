@@ -77,36 +77,63 @@ protected List<Acertijo> obtenerAcertijos() {
 
 
     public void generarElementos() {
-        List<String> mezcla = new ArrayList<>();
+      List<String> mezcla = new ArrayList<>();
 
-        for (String tipo : tiposEnemigos()) {
-            int cantidad = cantidadDe(tipo);
-            for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
+    for (String tipo : tiposEnemigos()) {
+        int cantidad = cantidadDe(tipo);
+        for (int i = 0; i < cantidad; i++) {
+            mezcla.add(tipo);
         }
+    }
 
-        for (String tipo : tiposArtefactos()) {
-            int cantidad = cantidadDe(tipo);
-            for (int i = 0; i < cantidad; i++) mezcla.add(tipo);
+    for (String tipo : tiposArtefactos()) {
+        int cantidad = cantidadDe(tipo);
+        for (int i = 0; i < cantidad; i++) {
+            mezcla.add(tipo);
         }
+    }
 
-        Collections.shuffle(mezcla, rand);
+    Collections.shuffle(mezcla, rand);
 
-        for (String tipo : mezcla) {
-            Sprite nuevo = null;
-            boolean colocado = false;
-            int intentos = 0;
+    for (String tipo : mezcla) {
+        Sprite nuevo = null;
+        boolean colocado = false;
+        int intentos = 0;
 
-            while (!colocado && intentos < 100) {
-                int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
-                int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
+        while (!colocado && intentos < 100) {
+            int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
+            int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
 
-                switch (tipo) {
-                    case "Tucan": nuevo = new Tucan(x, y); break;
-                    case "Frailejon": nuevo = new Frailejon(x, y); break;
-                    case "Cuy": nuevo = new Cuy(x, y); break;
-                    case "Capybara": nuevo = new Capybara(x, y); break;
-                    case "Botella": nuevo = new Botella(x, y); break;
-                    case "Esmeralda": nuevo = new Esmeralda(x, y); break;
+            switch (tipo) {
+                case "Tucan":
+                    nuevo = new Tucan(x, y);
+                    break;
+                case "Frailejon":
+                    nuevo = new Frailejon(x, y);
+                    break;
+                case "Cuy":
+                    nuevo = new Cuy(x, y);
+                    break;
+                case "Capybara":
+                    nuevo = new Capybara(x, y);
+                    break;
+                case "Botella":
+                    nuevo = new Botella(x, y);
+                    break;
+                case "Esmeralda":
+                    nuevo = new Esmeralda(x, y);
+                    break;
+                default:
+                    break;
+            }
+
+            if (nuevo != null) {
+                // Ajuste para evitar que se salga del área visible
+                if (nuevo.getX() + nuevo.getBounds().width > ANCHO_PANTALLA - MARGEN) {
+                    nuevo.setX(ANCHO_PANTALLA - MARGEN - nuevo.getBounds().width);
+                }
+                if (nuevo.getY() + nuevo.getBounds().height > ALTO_PANTALLA - MARGEN) {
+                    nuevo.setY(ALTO_PANTALLA - MARGEN - nuevo.getBounds().height);
                 }
 
                 if (!colisionaConExistentes(nuevo)) {
@@ -117,11 +144,12 @@ protected List<Acertijo> obtenerAcertijos() {
                     }
                     colocado = true;
                 }
-
-                intentos++;
             }
+
+            intentos++;
         }
     }
+}
 
     private boolean colisionaConExistentes(Sprite nuevo) {
         if (jugador != null && nuevo.getBounds().intersects(jugador.getBounds())) {

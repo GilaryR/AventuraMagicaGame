@@ -32,20 +32,23 @@ public class ControladorJuego {
         if (nivel == null) {
             throw new IllegalArgumentException("El nivel no puede ser nulo");
         }
-
         this.nivel = nivel;
-        this.jugador = new Jugador(400, 500);
+        inicializarJuego();
+    }
 
+    /** Inicializa los elementos del juego basados en el nivel */
+    private void inicializarJuego() {
+        this.jugador = new Jugador(400, 500);
         nivel.setJugador(jugador);
         nivel.generarElementos();
         nivel.generarSimbolosPregunta();
 
-        this.enemigos = new ArrayList<>(nivel.getEnemigos());
-        this.artefactos = new ArrayList<>(nivel.getArtefactos());
-        this.simbolos = new ArrayList<>(nivel.getSimbolosPregunta());
+        enemigos = new ArrayList<>(nivel.getEnemigos());
+        artefactos = new ArrayList<>(nivel.getArtefactos());
+        simbolos = new ArrayList<>(nivel.getSimbolosPregunta());
     }
 
-    /** Movimiento del jugador */
+    /** Mueve al jugador según el desplazamiento indicado, respetando límites */
     public void moverJugador(int dx, int dy, int anchoPanel, int altoPanel) {
         if (jugador != null) {
             jugador.mover(dx, dy, anchoPanel, altoPanel);
@@ -61,14 +64,15 @@ public class ControladorJuego {
         }
     }
 
-    /** Verifica colisiones y actualiza estados */
+    /** Verifica todas las colisiones y actualiza los estados de los elementos */
     public void verificarColisiones() {
-        colisionJugadorEnemigos();
-        colisionJugadorArtefactos();
-        colisionJugadorSimbolos();
+        verificarColisionJugadorEnemigos();
+        verificarColisionJugadorArtefactos();
+        verificarColisionJugadorSimbolos();
     }
 
-    private void colisionJugadorEnemigos() {
+    /** Maneja la colisión entre jugador y enemigos */
+    private void verificarColisionJugadorEnemigos() {
         for (Enemigo enemigo : enemigos) {
             if (enemigo != null && enemigo.isVisible() && colision(jugador, enemigo)) {
                 jugador.reducirVida(5);
@@ -78,7 +82,8 @@ public class ControladorJuego {
         }
     }
 
-    private void colisionJugadorArtefactos() {
+    /** Maneja la colisión entre jugador y artefactos */
+    private void verificarColisionJugadorArtefactos() {
         for (Artefacto artefacto : artefactos) {
             if (artefacto != null && artefacto.isVisible() && !artefacto.isRecolectado() && colision(jugador, artefacto)) {
                 artefacto.setRecolectado(true);
@@ -94,13 +99,12 @@ public class ControladorJuego {
         }
     }
 
-    private void colisionJugadorSimbolos() {
+    /** Maneja la colisión entre jugador y símbolos de pregunta */
+    private void verificarColisionJugadorSimbolos() {
         for (SimboloPregunta simbolo : simbolos) {
-            if (simbolo != null && simbolo.isVisible() &&
-                simbolo.verificarColision(jugador.getX(), jugador.getY(), jugador.getAncho(), jugador.getAlto())) {
-
+            if (simbolo != null && simbolo.isVisible() && simbolo.verificarColision(
+                    jugador.getX(), jugador.getY(), jugador.getAncho(), jugador.getAlto())) {
                 int puntos = simbolo.manejarColision();
-
                 if (puntos > 0) {
                     jugador.aumentarPuntaje(puntos);
                 } else if (puntos < 0) {
@@ -110,7 +114,7 @@ public class ControladorJuego {
         }
     }
 
-    /** Dibuja los elementos en pantalla */
+    /** Dibuja todos los elementos en pantalla */
     public void dibujarJugador(Graphics g) {
         if (jugador != null) {
             jugador.dibujar(g);
@@ -141,19 +145,13 @@ public class ControladorJuego {
         }
     }
 
-    /** Cambia el nivel actual y reinicia elementos */
+    /** Cambia el nivel actual y reinicia los elementos asociados */
     public void setNivel(NivelBase nuevoNivel) {
         if (nuevoNivel == null) {
             throw new IllegalArgumentException("El nuevo nivel no puede ser nulo");
         }
         this.nivel = nuevoNivel;
-        this.nivel.setJugador(jugador);
-        this.nivel.generarElementos();
-        this.nivel.generarSimbolosPregunta();
-
-        this.enemigos = new ArrayList<>(nivel.getEnemigos());
-        this.artefactos = new ArrayList<>(nivel.getArtefactos());
-        this.simbolos = new ArrayList<>(nivel.getSimbolosPregunta());
+        inicializarJuego();
     }
 
     public Jugador getJugador() {
@@ -162,7 +160,9 @@ public class ControladorJuego {
 
     /** Verifica si dos sprites colisionan */
     private boolean colision(Sprite a, Sprite b) {
-        if (a == null || b == null) return false;
+        if (a == null || b == null) {
+            return false;
+        }
         return a.getBounds().intersects(b.getBounds());
     }
 }

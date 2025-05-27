@@ -9,6 +9,16 @@ public class NivelFacil extends NivelBase {
         super();
         setFondo("/autonoma/AventuraMagicaGame/images/fondoFacil.jpg");  
     }
+    
+    public int contarBotellasRecolectadas() {
+        int contador = 0;
+        for (Artefacto a : getArtefactos()) {
+            if (a instanceof Botella && a.isRecolectado()) {
+                contador++;
+            }
+        }
+        return contador;
+    }
 
     @Override
     protected List<String> tiposEnemigos() {

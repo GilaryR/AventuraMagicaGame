@@ -31,7 +31,7 @@ public class NivelDificil extends NivelBase {
     @Override
     protected int cantidadDe(String tipo) {
         switch (tipo) {
-            case "Tucan": return 4;
+            case "Tucan": return 20;
             case "Frailejon": return 3;
             case "Cuy": return 4;
             case "Capybara": return 3;
@@ -43,7 +43,7 @@ public class NivelDificil extends NivelBase {
 
     @Override
     protected int artefactosRequeridos() {
-        return 7;
+        return 45;
     }
 
     @Override
