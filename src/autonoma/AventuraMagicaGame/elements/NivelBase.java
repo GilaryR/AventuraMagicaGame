@@ -73,6 +73,14 @@ public abstract class NivelBase implements Nivel {
         lista.add(new Acertijo("¿Qué animal es típico de los Llanos orientales?", "Capibara", "Chigüiro"));
         lista.add(new Acertijo("¿Colombia tiene acceso a cuántos océanos?", "2", "dos"));
         lista.add(new Acertijo("¿Cómo se llama la flor nacional de Colombia?", "Orquídea", "orquidea"));
+        lista.add(new Acertijo("¿Cuál es la ciudad conocida como 'La ciudad amurallada'?", "Cartagena", "Cartagena de Indias"));
+        lista.add(new Acertijo("¿Qué famoso escritor colombiano ganó el Premio Nobel de Literatura?", "Gabriel García Márquez", "Gabo"));
+        lista.add(new Acertijo("¿Cuál es el plato típico más representativo de Antioquia?", "Bandeja paisa", "Bandeja"));
+        lista.add(new Acertijo("¿Qué río es el más largo de Colombia?", "Magdalena", "Río Magdalena"));
+        lista.add(new Acertijo("¿En qué ciudad se celebra la Feria de las Flores?", "Medellín", "Medallo"));
+        lista.add(new Acertijo("¿Cuál es el nombre del sombrero típico de la costa Caribe?", "Sombrero vueltiao", "Vueltiao"));
+        lista.add(new Acertijo("¿Qué ciudad es conocida como la 'Sucursal del cielo'?", "Cali", "Santiago de Cali"));
+        lista.add(new Acertijo("¿Cómo se llama la moneda oficial de Colombia?", "Peso colombiano", "Peso"));
         return lista;
     }
 
