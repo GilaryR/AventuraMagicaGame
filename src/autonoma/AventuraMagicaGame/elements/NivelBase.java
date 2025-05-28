@@ -18,6 +18,9 @@ import javax.swing.ImageIcon;
  * @author Gilary
  * @version 2.1
  * @since 26/05/2025
+ *@author Alejandra Ortega
+ * @version 2.2
+ * @since 26/05/2025
  */
 
 public abstract class NivelBase implements Nivel {
@@ -28,12 +31,10 @@ public abstract class NivelBase implements Nivel {
     private Jugador jugador;
     private Image fondo;
 
-    // Cambio: Variables dinámicas en lugar de constantes
-    private int anchoPantalla = 800;  // valor por defecto
-    private int altoPantalla = 600;   // valor por defecto
+    private int anchoPantalla = 800;
+    private int altoPantalla = 600;
     private static final int MARGEN = 50;
     private static final Random rand = new Random();
-    private String rutaMusica;
 
     public NivelBase() {
         enemigos = new ArrayList<>();
@@ -41,7 +42,6 @@ public abstract class NivelBase implements Nivel {
         simbolos = new ArrayList<>();
     }
 
-    // Nuevo método: Actualizar dimensiones dinámicamente
     public void actualizarDimensiones(int ancho, int alto) {
         this.anchoPantalla = ancho;
         this.altoPantalla = alto;
@@ -53,7 +53,7 @@ public abstract class NivelBase implements Nivel {
 
     public Image getFondo() {
         return fondo;
-    }   
+    }
 
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
@@ -64,12 +64,8 @@ public abstract class NivelBase implements Nivel {
     protected abstract int cantidadDe(String tipo);
     protected abstract int artefactosRequeridos();
 
-    /**
-     * Puedes sobrescribir este método en los niveles concretos para cambiar los acertijos.
-     */
     protected List<Acertijo> obtenerAcertijos() {
         List<Acertijo> lista = new ArrayList<>();
-
         lista.add(new Acertijo("¿Animal símbolo de Colombia?", "Cóndor", "condor"));
         lista.add(new Acertijo("¿En qué año fue la independencia de Colombia?", "1810", "mil ochocientos diez"));
         lista.add(new Acertijo("¿Qué significa 'parcero' en Colombia?", "Amigo", "Parce"));
@@ -77,7 +73,6 @@ public abstract class NivelBase implements Nivel {
         lista.add(new Acertijo("¿Qué animal es típico de los Llanos orientales?", "Capibara", "Chigüiro"));
         lista.add(new Acertijo("¿Colombia tiene acceso a cuántos océanos?", "2", "dos"));
         lista.add(new Acertijo("¿Cómo se llama la flor nacional de Colombia?", "Orquídea", "orquidea"));
-
         return lista;
     }
 
@@ -106,51 +101,29 @@ public abstract class NivelBase implements Nivel {
             int intentos = 0;
 
             while (!colocado && intentos < 100) {
-                // Cambio: Usar dimensiones dinámicas y agregar espacio para sprites
-                int x = MARGEN + rand.nextInt(Math.max(1, anchoPantalla - 2 * MARGEN - 50)); // -50 para sprites
+                int x = MARGEN + rand.nextInt(Math.max(1, anchoPantalla - 2 * MARGEN - 50));
                 int y = MARGEN + rand.nextInt(Math.max(1, altoPantalla - 2 * MARGEN - 50));
 
                 switch (tipo) {
-                    case "Tucan":
-                        nuevo = new Tucan(x, y);
-                        break;
-                    case "Frailejon":
-                        nuevo = new Frailejon(x, y);
-                        break;
-                    case "Cuy":
-                        nuevo = new Cuy(x, y);
-                        break;
-                    case "Capybara":
-                        nuevo = new Capybara(x, y);
-                        break;
-                    case "Botella":
-                        nuevo = new Botella(x, y);
-                        break;
-                    case "Esmeralda":
-                        nuevo = new Esmeralda(x, y);
-                        break;
-                    default:
-                        break;
+                    case "Tucan": nuevo = new Tucan(x, y); break;
+                    case "Frailejon": nuevo = new Frailejon(x, y); break;
+                    case "Cuy": nuevo = new Cuy(x, y); break;
+                    case "Capybara": nuevo = new Capybara(x, y); break;
+                    case "Botella": nuevo = new Botella(x, y); break;
+                    case "Esmeralda": nuevo = new Esmeralda(x, y); break;
+                    default: break;
                 }
 
                 if (nuevo != null) {
-                    // Cambio: Ajuste mejorado para evitar que se salga del área visible
                     int maxX = anchoPantalla - nuevo.getBounds().width - MARGEN;
                     int maxY = altoPantalla - nuevo.getBounds().height - MARGEN;
-                    
-                    if (nuevo.getX() > maxX) {
-                        nuevo.setX(Math.max(MARGEN, maxX));
-                    }
-                    if (nuevo.getY() > maxY) {
-                        nuevo.setY(Math.max(MARGEN, maxY));
-                    }
+
+                    if (nuevo.getX() > maxX) nuevo.setX(Math.max(MARGEN, maxX));
+                    if (nuevo.getY() > maxY) nuevo.setY(Math.max(MARGEN, maxY));
 
                     if (!colisionaConExistentes(nuevo)) {
-                        if (nuevo instanceof Enemigo) {
-                            enemigos.add((Enemigo) nuevo);
-                        } else if (nuevo instanceof Artefacto) {
-                            artefactos.add((Artefacto) nuevo);
-                        }
+                        if (nuevo instanceof Enemigo) enemigos.add((Enemigo) nuevo);
+                        else if (nuevo instanceof Artefacto) artefactos.add((Artefacto) nuevo);
                         colocado = true;
                     }
                 }
@@ -161,44 +134,32 @@ public abstract class NivelBase implements Nivel {
     }
 
     private boolean colisionaConExistentes(Sprite nuevo) {
-        if (jugador != null && nuevo.getBounds().intersects(jugador.getBounds())) {
-            return true;
-        }
-
-        for (Enemigo e : enemigos) {
-            if (nuevo.getBounds().intersects(e.getBounds())) return true;
-        }
-        for (Artefacto a : artefactos) {
-            if (nuevo.getBounds().intersects(a.getBounds())) return true;
-        }
-        for (SimboloPregunta s : simbolos) {
-            if (nuevo.getBounds().intersects(s.getBounds())) return true;
-        }
+        if (jugador != null && nuevo.getBounds().intersects(jugador.getBounds())) return true;
+        for (Enemigo e : enemigos) if (nuevo.getBounds().intersects(e.getBounds())) return true;
+        for (Artefacto a : artefactos) if (nuevo.getBounds().intersects(a.getBounds())) return true;
+        for (SimboloPregunta s : simbolos) if (nuevo.getBounds().intersects(s.getBounds())) return true;
         return false;
     }
 
     public void generarSimbolosPregunta() {
+        List<Acertijo> acertijos = obtenerAcertijos();
+
         for (int i = 0; i < 3; i++) {
             boolean colocado = false;
             int intentos = 0;
+
             while (!colocado && intentos < 100) {
-                // Cambio: Usar dimensiones dinámicas
                 int x = MARGEN + rand.nextInt(Math.max(1, anchoPantalla - 2 * MARGEN - 50));
                 int y = MARGEN + rand.nextInt(Math.max(1, altoPantalla - 2 * MARGEN - 50));
 
-                SimboloPregunta simbolo = new SimboloPregunta(x, y, obtenerAcertijos());
-                
-                // Cambio: Verificar límites antes de agregar
+                SimboloPregunta simbolo = new SimboloPregunta(x, y, acertijos);
+
                 int maxX = anchoPantalla - simbolo.getBounds().width - MARGEN;
                 int maxY = altoPantalla - simbolo.getBounds().height - MARGEN;
-                
-                if (simbolo.getX() > maxX) {
-                    simbolo.setX(Math.max(MARGEN, maxX));
-                }
-                if (simbolo.getY() > maxY) {
-                    simbolo.setY(Math.max(MARGEN, maxY));
-                }
-                
+
+                if (simbolo.getX() > maxX) simbolo.setX(Math.max(MARGEN, maxX));
+                if (simbolo.getY() > maxY) simbolo.setY(Math.max(MARGEN, maxY));
+
                 if (!colisionaConExistentes(simbolo)) {
                     simbolos.add(simbolo);
                     colocado = true;
@@ -209,42 +170,11 @@ public abstract class NivelBase implements Nivel {
         }
     }
 
-    @Override
-    public List<Enemigo> getEnemigos() {
-        return enemigos;
-    }
-
-    @Override
-    public List<Artefacto> getArtefactos() {
-        return artefactos;
-    }
-
-    @Override
-    public List<SimboloPregunta> getSimbolosPregunta() {
-        return simbolos;
-    }
-
-    @Override
-    public int getArtefactosRequeridos() {
-        return artefactosRequeridos();
-    }
-    
-    @Override
-    public int size() {
-        return getEnemigos().size() + getArtefactos().size();
-        
-    }
-    public NivelBase(String rutaMusica) {
-        this.rutaMusica = rutaMusica;
-    }
-
-    public String getRutaMusica() {
-        return rutaMusica;
-    }
-
-    public void setRutaMusica(String rutaMusica) {
-        this.rutaMusica = rutaMusica;
-    }
+    @Override public List<Enemigo> getEnemigos() { return enemigos; }
+    @Override public List<Artefacto> getArtefactos() { return artefactos; }
+    @Override public List<SimboloPregunta> getSimbolosPregunta() { return simbolos; }
+    @Override public int getArtefactosRequeridos() { return artefactosRequeridos(); }
+    @Override public int size() { return enemigos.size() + artefactos.size(); }
 }
 
     

@@ -69,20 +69,5 @@ public class NivelDificil extends NivelBase {
         return 45;
     }
 
-    /**
-     * Proporciona los acertijos específicos para este nivel.
-     * @return Lista de objetos Acertijo con preguntas y respuestas válidas
-     */
-    @Override
-    protected List<Acertijo> obtenerAcertijos() {
-        List<Acertijo> lista = new ArrayList<>();
-        lista.add(new Acertijo("¿Cuál es el río más largo que recorre Colombia?", "Magdalena", "Río Magdalena"));
-        lista.add(new Acertijo("¿Qué escritor colombiano ganó el Nobel de Literatura?", "Gabriel García Márquez", "Gabo"));
-        lista.add(new Acertijo("¿Cuál es la capital del departamento del Amazonas?", "Leticia", "leticia"));
-        lista.add(new Acertijo("¿Nombre del volcán activo en el sur de Colombia?", "Galeras", "volcán Galeras"));
-        lista.add(new Acertijo("¿En qué cordillera se ubica Bogotá?", "Oriental", "Cordillera Oriental"));
-        lista.add(new Acertijo("¿Qué ciudad es conocida como la 'ciudad blanca'?", "Popayán", "popayan"));
-        lista.add(new Acertijo("¿Qué fruta tropical también se llama maracuyá?", "Parchita", "passiflora"));
-        return lista;
-    }
+
 }
