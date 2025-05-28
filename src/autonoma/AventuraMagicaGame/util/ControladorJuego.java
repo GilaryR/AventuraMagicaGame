@@ -19,9 +19,11 @@ import java.util.List;
  * @author Alejandra Ortega 
  * @since 26-05-2025
  * @version 3.0
+ * @author Gilary Rugeles
+ * @version 3.1
  */
 public class ControladorJuego {
- 
+  
     private Jugador jugador;
     private NivelBase nivel;
     private List<Enemigo> enemigos;
