@@ -15,20 +15,38 @@ import java.net.URL;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-
-
 /**
- *
+ * Clase que representa la ventana principal del juego Aventura Mágica.
+ * Esta clase extiende de JFrame y maneja la interfaz gráfica del menú principal
+ * y la transición al panel de juego.
+ * 
+ * <p>La ventana incluye:
+ * <ul>
+ *   <li>Un menú principal con botones para jugar, ver instrucciones y salir</li>
+ *   <li>Reproducción de música de fondo</li>
+ *   <li>Transición al panel de juego cuando se presiona el botón "Jugar"</li>
+ * </ul>
+ * 
  * @author jgiugtiñut
+ * @since 27-05-2025
+ * @version 2.0.0
  */
 public class Ventana extends javax.swing.JFrame {
- private PanelJuego panelJuego;
- private Clip clipMusica;
-
+    
+    /**
+     * Panel donde se renderiza el juego.
+     */
+    private PanelJuego panelJuego;
+    
+    /**
+     * Clip de audio para la música de fondo.
+     */
+    private Clip clipMusica;
 
     /**
-     * Creates new form Ventana
-     * @param nivelBase
+     * Constructor que inicializa la ventana principal.
+     * 
+     * @param nivelBase El nivel base del juego que se cargará inicialmente
      */
     public Ventana(NivelBase nivelBase) {
         initComponents();
@@ -40,8 +58,12 @@ public class Ventana extends javax.swing.JFrame {
         // NO creamos ni ponemos el panelJuego todavía
         // Así que el botón sigue visible al iniciar
         setVisible(true);
-        
     }
+
+    /**
+     * Reproduce la música del menú principal en loop continuo.
+     * La música se carga desde el archivo "/autonoma/AventuraMagicaGame/sounds/MusicaMenu.wav".
+     */
     private void reproducirMusicaMenu() {
         try {
             if (clipMusica != null && clipMusica.isRunning()) {
@@ -57,13 +79,22 @@ public class Ventana extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Detiene la reproducción de la música de fondo y libera los recursos.
+     */
     private void detenerMusica() {
         if (clipMusica != null && clipMusica.isRunning()) {
             clipMusica.stop();
             clipMusica.close();
         }
     }
-   
+
+    /**
+     * Método que se ejecuta al hacer clic en el botón Salir.
+     * Muestra un mensaje de despedida y cierra la aplicación.
+     * 
+     * @param evt Evento de acción del botón
+     */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -82,6 +113,7 @@ public class Ventana extends javax.swing.JFrame {
 
         Jugarbtn.setBackground(new java.awt.Color(255, 255, 102));
         Jugarbtn.setFont(new java.awt.Font("Lucida Fax", 3, 18)); // NOI18N
+        Jugarbtn.setForeground(new java.awt.Color(51, 51, 0));
         Jugarbtn.setText("Jugar");
         Jugarbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 0), 10));
         Jugarbtn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -103,6 +135,7 @@ public class Ventana extends javax.swing.JFrame {
 
         ComoJugarbtn1.setBackground(new java.awt.Color(255, 255, 102));
         ComoJugarbtn1.setFont(new java.awt.Font("Lucida Fax", 1, 18)); // NOI18N
+        ComoJugarbtn1.setForeground(new java.awt.Color(51, 51, 0));
         ComoJugarbtn1.setText("¿Como Jugar?");
         ComoJugarbtn1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 0), 10));
         ComoJugarbtn1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -195,23 +228,28 @@ public class Ventana extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SalirbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirbtnActionPerformed
-        JOptionPane.showMessageDialog(this, "Gracias por jugar Aventura Mágica 💫\n!", "Hasta pronto", JOptionPane.INFORMATION_MESSAGE);
-        detenerMusica();
-        System.exit(0);
+    JOptionPane.showMessageDialog(this, "Gracias por jugar Aventura Mágica 💫\n!", "Hasta pronto", JOptionPane.INFORMATION_MESSAGE);
+    detenerMusica();
+    System.exit(0);
     }//GEN-LAST:event_SalirbtnActionPerformed
 
     private void SalirbtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirbtnMouseExited
-        Salirbtn.setBackground(Color.CYAN);
+    Salirbtn.setBackground(Color.YELLOW);
     }//GEN-LAST:event_SalirbtnMouseExited
 
     private void SalirbtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirbtnMouseEntered
-        Salirbtn.setBackground(Color.CYAN);
+    Salirbtn.setBackground(Color.ORANGE);
     }//GEN-LAST:event_SalirbtnMouseEntered
 
     private void SalirbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirbtnMouseClicked
 
     }//GEN-LAST:event_SalirbtnMouseClicked
-
+ /**
+     * Método que se ejecuta al hacer clic en el botón "¿Cómo Jugar?".
+     * Muestra un diálogo con las instrucciones del juego.
+     * 
+     * @param evt Evento de acción del botón
+     */
     private void ComoJugarbtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComoJugarbtn1ActionPerformed
         JOptionPane.showMessageDialog(this,
             "Bienvenido a Aventura Mágica\n\n" +
@@ -223,11 +261,11 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_ComoJugarbtn1ActionPerformed
 
     private void ComoJugarbtn1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComoJugarbtn1MouseExited
-        ComoJugarbtn1.setBackground(Color.CYAN);
+        ComoJugarbtn1.setBackground(Color.YELLOW);
     }//GEN-LAST:event_ComoJugarbtn1MouseExited
 
     private void ComoJugarbtn1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComoJugarbtn1MouseEntered
-        ComoJugarbtn1.setBackground(Color.CYAN);
+        ComoJugarbtn1.setBackground(Color.GRAY);
     }//GEN-LAST:event_ComoJugarbtn1MouseEntered
 
     private void ComoJugarbtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComoJugarbtn1MouseClicked
@@ -246,7 +284,6 @@ public class Ventana extends javax.swing.JFrame {
             getContentPane().removeAll();
             setLayout(new BorderLayout());
             add(panelJuego, BorderLayout.CENTER);
-            detenerMusica();
 
             revalidate();
             repaint();
@@ -259,11 +296,11 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_JugarbtnActionPerformed
 
     private void JugarbtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JugarbtnMouseExited
-        Jugarbtn.setBackground(Color.CYAN);
+        Jugarbtn.setBackground(Color.YELLOW);
     }//GEN-LAST:event_JugarbtnMouseExited
 
     private void JugarbtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JugarbtnMouseEntered
-        Jugarbtn.setBackground(Color.CYAN);
+        Jugarbtn.setBackground(Color.GRAY);
     }//GEN-LAST:event_JugarbtnMouseEntered
 
     private void JugarbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JugarbtnMouseClicked

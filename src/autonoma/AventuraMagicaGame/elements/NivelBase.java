@@ -33,6 +33,7 @@ public abstract class NivelBase implements Nivel {
     private int altoPantalla = 600;   // valor por defecto
     private static final int MARGEN = 50;
     private static final Random rand = new Random();
+    private String rutaMusica;
 
     public NivelBase() {
         enemigos = new ArrayList<>();
@@ -231,5 +232,19 @@ public abstract class NivelBase implements Nivel {
     @Override
     public int size() {
         return getEnemigos().size() + getArtefactos().size();
+        
+    }
+    public NivelBase(String rutaMusica) {
+        this.rutaMusica = rutaMusica;
+    }
+
+    public String getRutaMusica() {
+        return rutaMusica;
+    }
+
+    public void setRutaMusica(String rutaMusica) {
+        this.rutaMusica = rutaMusica;
     }
 }
+
+    
