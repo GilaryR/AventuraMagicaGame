@@ -36,11 +36,34 @@ public class Ventana extends javax.swing.JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        reproducirMusicaMenu();
         // NO creamos ni ponemos el panelJuego todavía
         // Así que el botón sigue visible al iniciar
         setVisible(true);
+        
     }
+    private void reproducirMusicaMenu() {
+        try {
+            if (clipMusica != null && clipMusica.isRunning()) {
+                clipMusica.stop();
+            }
+            URL sonidoURL = getClass().getResource("/autonoma/AventuraMagicaGame/sounds/MusicaMenu.wav");
+            AudioInputStream audioInput = AudioSystem.getAudioInputStream(sonidoURL);
+            clipMusica = AudioSystem.getClip();
+            clipMusica.open(audioInput);
+            clipMusica.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            System.out.println("Error al reproducir música: " + e.getMessage());
+        }
+    }
+
+    private void detenerMusica() {
+        if (clipMusica != null && clipMusica.isRunning()) {
+            clipMusica.stop();
+            clipMusica.close();
+        }
+    }
+   
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -132,36 +155,29 @@ public class Ventana extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addComponent(Salirbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ComoJugarbtn1)))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Jugarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(23, 23, 23))))
+                        .addGap(18, 18, 18)
+                        .addComponent(Jugarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(Salirbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ComoJugarbtn1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(54, 54, 54)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(47, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(Jugarbtn)
-                        .addGap(92, 92, 92)
-                        .addComponent(ComoJugarbtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(85, 85, 85)
-                        .addComponent(Salirbtn)
-                        .addGap(81, 81, 81))))
+                        .addComponent(Jugarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(91, 91, 91)
+                        .addComponent(ComoJugarbtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Salirbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -230,6 +246,7 @@ public class Ventana extends javax.swing.JFrame {
             getContentPane().removeAll();
             setLayout(new BorderLayout());
             add(panelJuego, BorderLayout.CENTER);
+            detenerMusica();
 
             revalidate();
             repaint();
@@ -252,27 +269,7 @@ public class Ventana extends javax.swing.JFrame {
     private void JugarbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JugarbtnMouseClicked
 
     }//GEN-LAST:event_JugarbtnMouseClicked
-private void reproducirMusicaMenu() {
-    try {
-        if (clipMusica != null && clipMusica.isRunning()) {
-            clipMusica.stop();
-        }
-        URL sonidoURL = getClass().getResource("/autonoma/AventuraMagicaGame/sounds/musica_menu.wav");
-        AudioInputStream audioInput = AudioSystem.getAudioInputStream(sonidoURL);
-        clipMusica = AudioSystem.getClip();
-        clipMusica.open(audioInput);
-        clipMusica.loop(Clip.LOOP_CONTINUOUSLY);
-    } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
-        System.out.println("Error al reproducir música: " + e.getMessage());
-    }
-}
 
-private void detenerMusica() {
-    if (clipMusica != null && clipMusica.isRunning()) {
-        clipMusica.stop();
-        clipMusica.close();
-    }
-}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ComoJugarbtn1;
     private javax.swing.JButton Jugarbtn;
