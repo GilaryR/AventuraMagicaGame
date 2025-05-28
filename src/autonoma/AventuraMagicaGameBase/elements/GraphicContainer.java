@@ -5,8 +5,9 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 /**
- *
- * @author jgiugtiñut
+ * @author Gilary 
+ * @since 26/05/2025
+ * @version 2.0
  */
 public class GraphicContainer extends JPanel {
     private SpriteContainer spriteContainer;

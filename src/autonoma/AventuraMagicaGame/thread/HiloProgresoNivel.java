@@ -1,12 +1,15 @@
+
 package autonoma.AventuraMagicaGame.thread;
 
-import autonoma.AventuraMagicaGame.util.GestorNivel;
 import autonoma.AventuraMagicaGame.elements.Jugador;
+import autonoma.AventuraMagicaGame.util.GestorNivel;
+
+
 /**
  * Hilo que verifica periódicamente el progreso del jugador en el nivel actual
  * y gestiona el avance de nivel cuando se completan los requisitos.
  * 
- *Este hilo se ejecuta en segundo plano y verifica en intervalos
+ * Este hilo se ejecuta en segundo plano y verifica en intervalos
  * regulares si el jugador ha recolectado suficientes artefactos para completar
  * el nivel actual. Cuando se cumplen los requisitos, ejecuta una acción de callback
  * para avanzar al siguiente nivel.
@@ -29,8 +32,14 @@ public class HiloProgresoNivel extends Thread {
     /** Flag que controla la ejecución del hilo */
     private volatile boolean enEjecucion;
     
+    /** Flag que indica si se está procesando un cambio de nivel */
+    private volatile boolean cambiandoNivel;
+    
     /** Intervalo de tiempo entre verificaciones en milisegundos */
     private static final int INTERVALO_VERIFICACION = 500;
+    
+    /** Tiempo de espera después del cambio de nivel en milisegundos */
+    private static final int PAUSA_CAMBIO_NIVEL = 1000;
 
     /**
      * Crea una nueva instancia del hilo de verificación de progreso.
@@ -44,6 +53,7 @@ public class HiloProgresoNivel extends Thread {
         this.gestor = gestor;
         this.alCompletarNivel = alCompletarNivel;
         this.enEjecucion = true;
+        this.cambiandoNivel = false;
         this.setDaemon(true); // Para que el hilo no impida cerrar la aplicación
     }
 
@@ -55,7 +65,9 @@ public class HiloProgresoNivel extends Thread {
     @Override
     public void run() {
         while (enEjecucion) {
-            verificarProgreso();
+            if (!cambiandoNivel) {
+                verificarProgreso();
+            }
             esperarIntervalo();
         }
     }
@@ -67,17 +79,48 @@ public class HiloProgresoNivel extends Thread {
      * y reinicia los contadores del jugador.</p>
      */
     private void verificarProgreso() {
-        int requeridos = gestor.getArtefactosRequeridosActual();
-        int botellasRecolectadas = jugador.getBotellasRecolectadas();
+        try {
+            int requeridos = gestor.getArtefactosRequeridosActual();
+            int botellasRecolectadas = jugador.getBotellasRecolectadas();
+            if (botellasRecolectadas >= requeridos) {
+                procesarCompletadoNivel();
+            }
+        } catch (Exception e) {
+            System.err.println("Error verificando progreso: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Procesa el completado del nivel actual de forma sincronizada.
+     */
+    private synchronized void procesarCompletadoNivel() {
+        if (cambiandoNivel) {
+            return; // Ya se está procesando un cambio de nivel
+        }
         
-        if (botellasRecolectadas >= requeridos) {
+        cambiandoNivel = true;
+        
+        try {
             if (puedeAvanzarMas()) {
-                alCompletarNivel.run();     // Avanza de nivel
-                reiniciarContadores();      // Luego reinicia los contadores
+      
+                // Primero reiniciar contadores
+                reiniciarContadores();
+                
+                // Luego avanzar de nivel
+                alCompletarNivel.run();
+                
+                // Pausa para permitir que se procese el cambio completamente
+                Thread.sleep(PAUSA_CAMBIO_NIVEL);
+
+                
             } else {
-                System.out.println("¡Todos los niveles completados!");
                 detener(); // Detiene el hilo si no hay más niveles
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            enEjecucion = false;
+        } finally {
+            cambiandoNivel = false;
         }
     }
 
@@ -87,6 +130,7 @@ public class HiloProgresoNivel extends Thread {
     private void reiniciarContadores() {
         jugador.setBotellasRecolectadas(0);
         jugador.setEsmeraldasRecolectadas(0);
+ 
     }
 
     /**
@@ -120,5 +164,14 @@ public class HiloProgresoNivel extends Thread {
     public void detener() {
         enEjecucion = false;
         interrupt();
+    }
+    
+    /**
+     * Verifica si el hilo está actualmente cambiando de nivel.
+     * 
+     * @return true si se está procesando un cambio de nivel
+     */
+    public boolean estaCambiandoNivel() {
+        return cambiandoNivel;
     }
 }

@@ -4,8 +4,9 @@ package autonoma.AventuraMagicaGameBase.elements;
 import java.util.ArrayList;
 
 /**
- *
- * @author jgiugtiñut
+ * @author Gilary 
+ * @since 26/05/2025
+ * @version 2.0
  */
 
 public class SpriteContainer {

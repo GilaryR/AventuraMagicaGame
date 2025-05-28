@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
  * @version 2.1
  * @since 26/05/2025
  */
+
 public abstract class NivelBase implements Nivel {
 
     private List<Enemigo> enemigos;
@@ -27,8 +28,9 @@ public abstract class NivelBase implements Nivel {
     private Jugador jugador;
     private Image fondo;
 
-    private static final int ANCHO_PANTALLA = 800;
-    private static final int ALTO_PANTALLA = 600;
+    // Cambio: Variables dinámicas en lugar de constantes
+    private int anchoPantalla = 800;  // valor por defecto
+    private int altoPantalla = 600;   // valor por defecto
     private static final int MARGEN = 50;
     private static final Random rand = new Random();
 
@@ -38,14 +40,19 @@ public abstract class NivelBase implements Nivel {
         simbolos = new ArrayList<>();
     }
 
+    // Nuevo método: Actualizar dimensiones dinámicamente
+    public void actualizarDimensiones(int ancho, int alto) {
+        this.anchoPantalla = ancho;
+        this.altoPantalla = alto;
+    }
 
     public void setFondo(String rutaImagen) {
-    this.fondo = new ImageIcon(getClass().getResource(rutaImagen)).getImage();
+        this.fondo = new ImageIcon(getClass().getResource(rutaImagen)).getImage();
     }
 
     public Image getFondo() {
-    return fondo;
-}   
+        return fondo;
+    }   
 
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
@@ -59,97 +66,98 @@ public abstract class NivelBase implements Nivel {
     /**
      * Puedes sobrescribir este método en los niveles concretos para cambiar los acertijos.
      */
-   
-protected List<Acertijo> obtenerAcertijos() {
-    List<Acertijo> lista = new ArrayList<>();
+    protected List<Acertijo> obtenerAcertijos() {
+        List<Acertijo> lista = new ArrayList<>();
 
-    lista.add(new Acertijo("¿Animal símbolo de Colombia?", "Cóndor", "condor"));
-    lista.add(new Acertijo("¿En qué año fue la independencia de Colombia?", "1810", "mil ochocientos diez"));
-    lista.add(new Acertijo("¿Qué significa 'parcero' en Colombia?", "Amigo", "Parce"));
-    lista.add(new Acertijo("¿Cuál es el parque natural más grande de Colombia?", "Serranía de Chiribiquete", "Chiribiquete"));
-    lista.add(new Acertijo("¿Qué animal es típico de los Llanos orientales?", "Capibara", "Chigüiro"));
-    lista.add(new Acertijo("¿Colombia tiene acceso a cuántos océanos?", "2", "dos"));
-    lista.add(new Acertijo("¿Cómo se llama la flor nacional de Colombia?", "Orquídea", "orquidea"));
+        lista.add(new Acertijo("¿Animal símbolo de Colombia?", "Cóndor", "condor"));
+        lista.add(new Acertijo("¿En qué año fue la independencia de Colombia?", "1810", "mil ochocientos diez"));
+        lista.add(new Acertijo("¿Qué significa 'parcero' en Colombia?", "Amigo", "Parce"));
+        lista.add(new Acertijo("¿Cuál es el parque natural más grande de Colombia?", "Serranía de Chiribiquete", "Chiribiquete"));
+        lista.add(new Acertijo("¿Qué animal es típico de los Llanos orientales?", "Capibara", "Chigüiro"));
+        lista.add(new Acertijo("¿Colombia tiene acceso a cuántos océanos?", "2", "dos"));
+        lista.add(new Acertijo("¿Cómo se llama la flor nacional de Colombia?", "Orquídea", "orquidea"));
 
-    return lista;
-}
-
-
+        return lista;
+    }
 
     public void generarElementos() {
-      List<String> mezcla = new ArrayList<>();
+        List<String> mezcla = new ArrayList<>();
 
-    for (String tipo : tiposEnemigos()) {
-        int cantidad = cantidadDe(tipo);
-        for (int i = 0; i < cantidad; i++) {
-            mezcla.add(tipo);
-        }
-    }
-
-    for (String tipo : tiposArtefactos()) {
-        int cantidad = cantidadDe(tipo);
-        for (int i = 0; i < cantidad; i++) {
-            mezcla.add(tipo);
-        }
-    }
-
-    Collections.shuffle(mezcla, rand);
-
-    for (String tipo : mezcla) {
-        Sprite nuevo = null;
-        boolean colocado = false;
-        int intentos = 0;
-
-        while (!colocado && intentos < 100) {
-            int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
-            int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
-
-            switch (tipo) {
-                case "Tucan":
-                    nuevo = new Tucan(x, y);
-                    break;
-                case "Frailejon":
-                    nuevo = new Frailejon(x, y);
-                    break;
-                case "Cuy":
-                    nuevo = new Cuy(x, y);
-                    break;
-                case "Capybara":
-                    nuevo = new Capybara(x, y);
-                    break;
-                case "Botella":
-                    nuevo = new Botella(x, y);
-                    break;
-                case "Esmeralda":
-                    nuevo = new Esmeralda(x, y);
-                    break;
-                default:
-                    break;
+        for (String tipo : tiposEnemigos()) {
+            int cantidad = cantidadDe(tipo);
+            for (int i = 0; i < cantidad; i++) {
+                mezcla.add(tipo);
             }
+        }
 
-            if (nuevo != null) {
-                // Ajuste para evitar que se salga del área visible
-                if (nuevo.getX() + nuevo.getBounds().width > ANCHO_PANTALLA - MARGEN) {
-                    nuevo.setX(ANCHO_PANTALLA - MARGEN - nuevo.getBounds().width);
-                }
-                if (nuevo.getY() + nuevo.getBounds().height > ALTO_PANTALLA - MARGEN) {
-                    nuevo.setY(ALTO_PANTALLA - MARGEN - nuevo.getBounds().height);
+        for (String tipo : tiposArtefactos()) {
+            int cantidad = cantidadDe(tipo);
+            for (int i = 0; i < cantidad; i++) {
+                mezcla.add(tipo);
+            }
+        }
+
+        Collections.shuffle(mezcla, rand);
+
+        for (String tipo : mezcla) {
+            Sprite nuevo = null;
+            boolean colocado = false;
+            int intentos = 0;
+
+            while (!colocado && intentos < 100) {
+                // Cambio: Usar dimensiones dinámicas y agregar espacio para sprites
+                int x = MARGEN + rand.nextInt(Math.max(1, anchoPantalla - 2 * MARGEN - 50)); // -50 para sprites
+                int y = MARGEN + rand.nextInt(Math.max(1, altoPantalla - 2 * MARGEN - 50));
+
+                switch (tipo) {
+                    case "Tucan":
+                        nuevo = new Tucan(x, y);
+                        break;
+                    case "Frailejon":
+                        nuevo = new Frailejon(x, y);
+                        break;
+                    case "Cuy":
+                        nuevo = new Cuy(x, y);
+                        break;
+                    case "Capybara":
+                        nuevo = new Capybara(x, y);
+                        break;
+                    case "Botella":
+                        nuevo = new Botella(x, y);
+                        break;
+                    case "Esmeralda":
+                        nuevo = new Esmeralda(x, y);
+                        break;
+                    default:
+                        break;
                 }
 
-                if (!colisionaConExistentes(nuevo)) {
-                    if (nuevo instanceof Enemigo) {
-                        enemigos.add((Enemigo) nuevo);
-                    } else if (nuevo instanceof Artefacto) {
-                        artefactos.add((Artefacto) nuevo);
+                if (nuevo != null) {
+                    // Cambio: Ajuste mejorado para evitar que se salga del área visible
+                    int maxX = anchoPantalla - nuevo.getBounds().width - MARGEN;
+                    int maxY = altoPantalla - nuevo.getBounds().height - MARGEN;
+                    
+                    if (nuevo.getX() > maxX) {
+                        nuevo.setX(Math.max(MARGEN, maxX));
                     }
-                    colocado = true;
-                }
-            }
+                    if (nuevo.getY() > maxY) {
+                        nuevo.setY(Math.max(MARGEN, maxY));
+                    }
 
-            intentos++;
+                    if (!colisionaConExistentes(nuevo)) {
+                        if (nuevo instanceof Enemigo) {
+                            enemigos.add((Enemigo) nuevo);
+                        } else if (nuevo instanceof Artefacto) {
+                            artefactos.add((Artefacto) nuevo);
+                        }
+                        colocado = true;
+                    }
+                }
+
+                intentos++;
+            }
         }
     }
-}
 
     private boolean colisionaConExistentes(Sprite nuevo) {
         if (jugador != null && nuevo.getBounds().intersects(jugador.getBounds())) {
@@ -173,10 +181,23 @@ protected List<Acertijo> obtenerAcertijos() {
             boolean colocado = false;
             int intentos = 0;
             while (!colocado && intentos < 100) {
-                int x = MARGEN + rand.nextInt(ANCHO_PANTALLA - 2 * MARGEN);
-                int y = MARGEN + rand.nextInt(ALTO_PANTALLA - 2 * MARGEN);
+                // Cambio: Usar dimensiones dinámicas
+                int x = MARGEN + rand.nextInt(Math.max(1, anchoPantalla - 2 * MARGEN - 50));
+                int y = MARGEN + rand.nextInt(Math.max(1, altoPantalla - 2 * MARGEN - 50));
 
                 SimboloPregunta simbolo = new SimboloPregunta(x, y, obtenerAcertijos());
+                
+                // Cambio: Verificar límites antes de agregar
+                int maxX = anchoPantalla - simbolo.getBounds().width - MARGEN;
+                int maxY = altoPantalla - simbolo.getBounds().height - MARGEN;
+                
+                if (simbolo.getX() > maxX) {
+                    simbolo.setX(Math.max(MARGEN, maxX));
+                }
+                if (simbolo.getY() > maxY) {
+                    simbolo.setY(Math.max(MARGEN, maxY));
+                }
+                
                 if (!colisionaConExistentes(simbolo)) {
                     simbolos.add(simbolo);
                     colocado = true;
@@ -206,9 +227,9 @@ protected List<Acertijo> obtenerAcertijos() {
     public int getArtefactosRequeridos() {
         return artefactosRequeridos();
     }
-        @Override
+    
+    @Override
     public int size() {
         return getEnemigos().size() + getArtefactos().size();
     }
 }
-

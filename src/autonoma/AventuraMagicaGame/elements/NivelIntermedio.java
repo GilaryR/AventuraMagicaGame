@@ -23,9 +23,9 @@ public class NivelIntermedio extends NivelBase {
     @Override
     protected int cantidadDe(String tipo) {
         switch (tipo) {
-            case "Tucan": return 20;
-            case "Frailejon": return 20;
-            case "Cuy": return 10;
+            case "Tucan": return 6;
+            case "Frailejon": return 2;
+            case "Cuy": return 5;
             case "Botella": return 40;
             case "Esmeralda": return 6;
             default: return 0;
