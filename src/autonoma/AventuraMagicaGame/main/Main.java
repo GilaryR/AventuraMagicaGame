@@ -6,6 +6,7 @@ package autonoma.AventuraMagicaGame.main;
 import autonoma.AventuraMagicaGame.elements.NivelBase;
 import autonoma.AventuraMagicaGame.elements.NivelFacil;
 import autonoma.AventuraMagicaGame.ui.Ventana;
+import autonoma.AventuraMagicaGame.util.GestorPuntaje;
 import javax.swing.SwingUtilities;
 
 /**

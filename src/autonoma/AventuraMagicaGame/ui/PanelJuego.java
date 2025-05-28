@@ -9,6 +9,7 @@ import autonoma.AventuraMagicaGame.elements.NivelBase;
 import autonoma.AventuraMagicaGame.exceptions.SonidoNoEncontradoException;
 import autonoma.AventuraMagicaGame.thread.HiloJuego;
 import autonoma.AventuraMagicaGame.thread.HiloProgresoNivel;
+import autonoma.AventuraMagicaGame.util.GestorPuntaje;
 import autonoma.AventuraMagicaGame.util.ReproductorSonido;
 import java.awt.*;
 import java.awt.event.*;
@@ -156,21 +157,39 @@ public class PanelJuego extends JPanel {
     }
 
     private void mostrarPantallaGameOver() {
+        int puntajeFinal = controlador.getJugador().getPuntaje();
+        int nivelAlcanzado = gestorNivel.getNumeroNivel();
+
+        // Una sola línea para guardar puntaje
+        GestorPuntaje.guardarPuntajeFinal(puntajeFinal, nivelAlcanzado);
+
         JOptionPane.showMessageDialog(this,
-            "¡Game Over! Te has quedado sin vidas.",
+            "¡Game Over! Te has quedado sin vidas.\n" +
+            "Puntaje final: " + puntajeFinal + "\n" +
+            "Nivel alcanzado: " + nivelAlcanzado,
             "Fin del Juego",
             JOptionPane.INFORMATION_MESSAGE);
+
         System.exit(0);
     }
 
     private void mostrarPantallaVictoria() {
         SwingUtilities.invokeLater(() -> {
+            int puntajeFinal = controlador.getJugador().getPuntaje();
+            int nivelMaximo = gestorNivel.getNumeroNivel();
+
+            // Una sola línea para guardar puntaje
+            GestorPuntaje.guardarPuntajeFinal(puntajeFinal, nivelMaximo);
+
             JOptionPane.showMessageDialog(
                 null,
-                "¡Felicidades! Has ganado el juego 🎉",
+                "¡Felicidades! Has ganado el juego 🎉\n" +
+                "Puntaje final: " + puntajeFinal + "\n" +
+                "¡Completaste todos los niveles!",
                 "Victoria",
                 JOptionPane.INFORMATION_MESSAGE
             );
+
             System.exit(0);
         });
     }
