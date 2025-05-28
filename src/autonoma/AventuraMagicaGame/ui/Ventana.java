@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package autonoma.AventuraMagicaGame.ui;
 
 import autonoma.AventuraMagicaGame.elements.Nivel;
@@ -11,6 +7,15 @@ import autonoma.AventuraMagicaGame.util.GestorNivel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JOptionPane;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioInputStream;
+import java.io.IOException;
+import java.net.URL;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+
 
 /**
  *
@@ -18,9 +23,12 @@ import javax.swing.JOptionPane;
  */
 public class Ventana extends javax.swing.JFrame {
  private PanelJuego panelJuego;
+ private Clip clipMusica;
+
 
     /**
      * Creates new form Ventana
+     * @param nivelBase
      */
     public Ventana(NivelBase nivelBase) {
         initComponents();
@@ -43,38 +51,149 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnIniciarJuego = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        Jugarbtn = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        Salirbtn = new javax.swing.JButton();
+        ComoJugarbtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnIniciarJuego.setText("jButton1");
-        btnIniciarJuego.addMouseListener(new java.awt.event.MouseAdapter() {
+        Jugarbtn.setText("Jugar");
+        Jugarbtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnIniciarJuegoMouseClicked(evt);
+                JugarbtnMouseClicked(evt);
             }
         });
+        Jugarbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JugarbtnActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        Salirbtn.setText("Salir");
+        Salirbtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                SalirbtnMouseClicked(evt);
+            }
+        });
+        Salirbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SalirbtnActionPerformed(evt);
+            }
+        });
+
+        ComoJugarbtn.setText("¿Como Jugar?");
+        ComoJugarbtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ComoJugarbtnMouseClicked(evt);
+            }
+        });
+        ComoJugarbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComoJugarbtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Salirbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ComoJugarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Jugarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(Jugarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78)
+                .addComponent(ComoJugarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(81, 81, 81)
+                .addComponent(Salirbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(307, Short.MAX_VALUE)
-                .addComponent(btnIniciarJuego)
-                .addGap(18, 18, 18))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(204, Short.MAX_VALUE)
-                .addComponent(btnIniciarJuego)
-                .addGap(73, 73, 73))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+private void reproducirMusicaMenu() {
+    try {
+        if (clipMusica != null && clipMusica.isRunning()) {
+            clipMusica.stop();
+        }
+        URL sonidoURL = getClass().getResource("/autonoma/AventuraMagicaGame/sounds/musica_menu.wav");
+        AudioInputStream audioInput = AudioSystem.getAudioInputStream(sonidoURL);
+        clipMusica = AudioSystem.getClip();
+        clipMusica.open(audioInput);
+        clipMusica.loop(Clip.LOOP_CONTINUOUSLY);
+    } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
+        System.out.println("Error al reproducir música: " + e.getMessage());
+    }
+}
 
-    private void btnIniciarJuegoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIniciarJuegoMouseClicked
+private void detenerMusica() {
+    if (clipMusica != null && clipMusica.isRunning()) {
+        clipMusica.stop();
+        clipMusica.close();
+    }
+}
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void JugarbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JugarbtnMouseClicked
         try {
             GestorNivel gestor = new GestorNivel();
             Nivel nivelActual = gestor.getNivelActual();
@@ -96,11 +215,43 @@ public class Ventana extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al iniciar el juego: " + e.getMessage());
         }
 
+    }//GEN-LAST:event_JugarbtnMouseClicked
 
-    }//GEN-LAST:event_btnIniciarJuegoMouseClicked
+    private void JugarbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JugarbtnActionPerformed
+
+    }//GEN-LAST:event_JugarbtnActionPerformed
+
+    private void SalirbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirbtnMouseClicked
+    JOptionPane.showMessageDialog(this, "Gracias por jugar Aventura Mágica 💫\n!", "Hasta pronto", JOptionPane.INFORMATION_MESSAGE);
+    detenerMusica(); 
+    System.exit(0);
+    }//GEN-LAST:event_SalirbtnMouseClicked
+
+    private void SalirbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirbtnActionPerformed
+
+    }//GEN-LAST:event_SalirbtnActionPerformed
+
+    private void ComoJugarbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComoJugarbtnMouseClicked
+        JOptionPane.showMessageDialog(this,
+        "Bienvenido a Aventura Mágica\n\n" +
+        "🕹️ Usa las teclas para mover a tu personaje\n" +
+        "🎯 Atrapa objetos buenos y evita los peligros\n" +
+        "❓ Recoge los símbolos de pregunta para obtener puntos\n\n" +
+        "¡Diviértete y alcanza la máxima puntuación!",
+        "¿Cómo jugar?", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_ComoJugarbtnMouseClicked
+
+    private void ComoJugarbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComoJugarbtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComoJugarbtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnIniciarJuego;
+    private javax.swing.JButton ComoJugarbtn;
+    private javax.swing.JButton Jugarbtn;
+    private javax.swing.JButton Salirbtn;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }
