@@ -1,3 +1,11 @@
+/**
+ * Clase que representa un enemigo Tucán en el juego.
+ * Extiende de la clase Enemigo y define características específicas del Tucán.
+ * 
+ * @author Luisa Fernanda Henao Posada
+ * @since 27-05-2025
+ * @version 2.0
+ */
 package autonoma.AventuraMagicaGame.elements;
 
 public class Tucan extends Enemigo {

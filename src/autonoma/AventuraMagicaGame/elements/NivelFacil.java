@@ -18,9 +18,10 @@ import java.util.List;
  * <p>El nivel fácil contiene enemigos más simples y menos exigentes
  * que los niveles superiores.</p>
  * 
- * @author [Autor del código]
- * @version 1.0
- * @see NivelBase
+ * @author Luisa Fernanda Henao Posada
+ * @since 27-05-2025
+ * @version 2.0
+ * 
  */
 public class NivelFacil extends NivelBase {
 
